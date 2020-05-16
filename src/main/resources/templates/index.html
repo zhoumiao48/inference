@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主页面</title>
+    <title>不确定性推理系统</title>
 
     <!--默认样式-->
     <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
@@ -15,90 +15,226 @@
 
     <!--首页样式-->
     <link rel="stylesheet" th:href="@{~/plugin/index/css/style.css}">
-<!--    <link rel="stylesheet" th:href="@{~/plugin/index/css/jq22.css}">-->
+    <style>
+        .el-input__inner{
+            width: 338px;
+            height: 40px;
+            font-size: 14px;
+            border:1px solid #cccccc;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <!--背景图片-->
-        <svg id="svg-source" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" style="position:absolute;
+<div id="app">
+    <!--背景图片-->
+    <svg id="svg-source" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" style="position:absolute;
         margin-left: -100%" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g id="close-icon">
-                <path d="M0.014,1.778L1.79,0.001l30.196,30.221l-1.778,1.777L0.014,1.778z"/>
-                <path d="M1.79,31.999l-1.776-1.777L30.208,0.001l1.778,1.777L1.79,31.999z"/>
-            </g>
-        </svg>
+        <g id="close-icon">
+            <path d="M0.014,1.778L1.79,0.001l30.196,30.221l-1.778,1.777L0.014,1.778z"/>
+            <path d="M1.79,31.999l-1.776-1.777L30.208,0.001l1.778,1.777L1.79,31.999z"/>
+        </g>
+    </svg>
 
 
-        <!-- begin -->
-        <div id="login">
-            <div class="wrapper">
-                <div class="login">
-                    <form action="#" method="post" class="container offset1 loginform">
-                        <div id="owl-login">
-                            <div class="hand"></div>
-                            <div class="hand hand-r"></div>
-                            <div class="arms">
-                                <div class="arm"></div>
-                                <div class="arm arm-r"></div>
+    <!-- begin -->
+    <div id="login">
+        <div class="wrapper">
+            <div class="login">
+                <form action="/user/login" method="post" class="container offset1 loginform"
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
+                      element-loading-spinner="el-icon-loading">
+                    <div id="owl-login">
+                        <div class="hand"></div>
+                        <div class="hand hand-r"></div>
+                        <div class="arms">
+                            <div class="arm"></div>
+                            <div class="arm arm-r"></div>
+                        </div>
+                    </div>
+                    <div class="pad">
+                        <input type="hidden" name="_csrf" value="9IAtUxV2CatyxHiK2LxzOsT6wtBE6h8BpzOmk=">
+                        <div class="control-group">
+                            <div class="controls">
+                                <label for="username" class="control-label fa fa-envelope"></label>
+                                <input id="username" v-model="username"
+                                       type="email" name="email" placeholder="用 户 名" tabindex="1" autofocus="autofocus"
+                                       class="form-control input-medium">
                             </div>
                         </div>
-                        <div class="pad">
-                            <input type="hidden" name="_csrf" value="9IAtUxV2CatyxHiK2LxzOsT6wtBE6h8BpzOmk=">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <label for="email" class="control-label fa fa-envelope"></label>
-                                    <input id="email" type="email" name="email" placeholder="Email" tabindex="1" autofocus="autofocus" class="form-control input-medium">
-                                </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <label for="password" class="control-label fa fa-asterisk"></label>
+                                <input id="password" v-model="password"
+                                       type="password" name="password" placeholder="密 码" tabindex="2"
+                                       class="form-control input-medium">
                             </div>
-                            <div class="control-group">
+                        </div>
+                        <el-collapse-transition>
+                            <div class="control-group" v-if="isRegister==1">
                                 <div class="controls">
                                     <label for="password" class="control-label fa fa-asterisk"></label>
-                                    <input id="password" type="password" name="password" placeholder="Password" tabindex="2" class="form-control input-medium">
+                                    <input id="password2" v-model="password2"
+                                           type="password" name="password" placeholder="确 认 密 码" tabindex="2"
+                                           class="form-control input-medium">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-actions"><a href="#" tabindex="5" class="btn pull-left btn-link text-muted">Forgot password?</a><a href="#" tabindex="6" class="btn btn-link text-muted">Sign Up</a>
-                            <button type="submit" tabindex="4" class="btn btn-primary">Login</button>
-                        </div>
-                    </form>
-                </div>
+                        </el-collapse-transition>
+                        <el-collapse-transition>
+                            <div v-if="isRegister==1">
+                                <el-select v-model="role"
+                                           size="mini"
+                                           clearable
+                                           placeholder="选 择 角 色">
+                                    <el-option
+                                            v-for="item in roleOptions"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </el-collapse-transition>
+                    </div>
+                    <div class="form-actions" v-if="isRegister==1">
+                        <a href="#" tabindex="5" class="btn pull-left btn-link text-muted">忘 记 密 码？</a>
+                        <a href="#" tabindex="6" class="btn btn-link text-muted" @click="transLogin()">返 回 登 录</a>
+                        <button type="button" tabindex="4" class="btn btn-primary" @click="register()">注 册</button>
+                    </div>
+                    <div class="form-actions" v-else>
+                        <a href="#" tabindex="5" class="btn pull-left btn-link text-muted">忘 记 密 码？</a>
+                        <a href="#" tabindex="6" class="btn btn-link text-muted" @click="transRegister()">账 号 注 册</a>
+                        <button type="button" tabindex="4" class="btn btn-primary" @click="login()">登 录</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <!-- end -->
     </div>
+    <!-- end -->
+</div>
 
-    <!--默认js-->
-    <script th:src="@{~/plugin/jquery/jquery.js}"></script>
-    <script th:src="@{~/plugin/vue/vue.min.js}"></script>
-    <script th:src="@{~/plugin/view-ui/iview.min.js}"></script>
-    <script th:src="@{~/plugin/bootstrap/js/bootstrap.min.js}"></script>
-    <script th:src="@{~/plugin/element-ui/lib/index.js}"></script>
+<!--默认js-->
+<script th:src="@{~/plugin/jquery/jquery.js}"></script>
+<script th:src="@{~/plugin/vue/vue.min.js}"></script>
+<script th:src="@{~/plugin/view-ui/iview.min.js}"></script>
+<script th:src="@{~/plugin/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{~/plugin/element-ui/lib/index.js}"></script>
+<script th:src="@{~/js/common.js}"></script>
 
-    <script>
-        var app = new Vue({
-            el:"#app",
-            data:{
-                isRegister:0
-            },
-            methods:{
-                changeMode(){
-                    console.log("helllo");
-                    if (app.isRegister === 0){
-                        app.isRegister = 1;
-                    }else{
-                        app.isRegister = 0;
-                    }
-                }
-            }
-        });
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            username: '',
+            password: '',
+            password2: '',
+            isRegister: 0,
+            loading: false,
+            role: '',
+            roleOptions: [],
+        },
+        methods: {}
+    });
 
-        $(function() {
-            $('#login #password').focus(function() {
-                $('#owl-login').addClass('password');
-            }).blur(function() {
-                $('#owl-login').removeClass('password');
+    // 清空输入框
+    function clearInput() {
+        app.username = '';
+        app.password = '';
+        app.password2 = '';
+        app.role = '';
+    }
+
+    // 账号注册
+    function register() {
+        if (app.password !== app.password2) {
+            app.$message({
+                message: '两次密码不一致，请重新输入',
+                type: 'warning'
             });
+            app.password = '';
+            app.password2 = '';
+            app.role = '';
+            return;
+        }
+
+        let data = {
+            username: app.username,
+            password: app.password,
+            roleId:app.role
+        };
+
+        app.loading = true;
+        ajaxPost("/user/register", data, function (d) {
+            if (d.code == 'success') {
+                app.$message({
+                    message: d.message,
+                    type: 'success'
+                });
+                transLogin();
+            } else {
+                app.$message.error(d.message);
+                clearInput();
+            }
+            app.loading = false;
         });
-    </script>
+    }
+
+    // 账号登录
+    function login() {
+        let data = {
+            username: app.username,
+            password: app.password
+        };
+        app.loading = true;
+        ajaxPost("/user/login", data, function (d) {
+            if (d.code === 'success') {
+                app.$message({
+                    message: '登录成功，欢迎回来',
+                    type: 'success'
+                });
+                window.location.href = "/view/goSystem"
+            } else {
+                app.loading = false;
+                app.$message.error(d.message);
+            }
+        })
+    }
+
+    // 转变为注册页面
+    function transRegister() {
+        clearInput();
+        app.isRegister = 1;
+    }
+
+    // 转变为登录页面
+    function transLogin() {
+        clearInput();
+        app.isRegister = 0;
+    }
+
+    // 打开页面的时候加载必要数据：role类型
+    window.onload = function () {
+        ajaxPost("/user/getRoleList", null, function (d) {
+            let ans = d.data;
+            let roleArr = [];
+            for (let i = 0; i < ans.length; i++) {
+                let tmp = {
+                    value: ans[i].id,
+                    label: ans[i].name
+                };
+                roleArr.push(tmp);
+            }
+            app.roleOptions = roleArr;
+        })
+    };
+
+    $(function () {
+        $('#login #password').focus(function () {
+            $('#owl-login').addClass('password');
+        }).blur(function () {
+            $('#owl-login').removeClass('password');
+        });
+    });
+</script>
 </body>
 </html>
