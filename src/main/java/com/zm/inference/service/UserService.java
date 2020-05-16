@@ -6,11 +6,13 @@ import com.zm.inference.domain.*;
 import com.zm.inference.mapper.DictMapper;
 import com.zm.inference.mapper.DictTypeMapper;
 import com.zm.inference.mapper.MapUserRoleMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.zm.inference.mapper.UserMapper;
 
@@ -18,6 +20,7 @@ import java.beans.Transient;
 import java.util.*;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Resource
@@ -65,7 +68,7 @@ public class UserService {
      * 新用户注册
      */
     @Transient
-    public boolean register(String username, String password,Integer roleId) {
+    public boolean register(String username, String password, Integer roleId) {
         int userCount = userMapper.selectByUName(username).size();
         if (userCount != 0) {
             return false;
@@ -99,7 +102,7 @@ public class UserService {
     /**
      * 用户登录
      */
-    public boolean login(String username, String password, HttpServletRequest request) {
+    public PlusUser login(String username, String password, HttpServletRequest request) {
         List<User> users = userMapper.selectByUName(username);
         if (users.size() == 1) {
             User userExist = users.get(0);
@@ -110,13 +113,23 @@ public class UserService {
                     // 加入用户角色
                     PlusUser plusUser = getUserRole(userExist);
                     request.getSession().setAttribute("plusUser", plusUser);
-                    return true;
+                    return plusUser;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * 用户登出
+     */
+    public boolean logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.removeAttribute("plusUser");
+        Object userInfo = session.getAttribute("plusUser");
+        return userInfo == null;
     }
 
     /**
@@ -134,9 +147,9 @@ public class UserService {
      */
     public PlusUser getUserRole(User user) {
         List<Integer> roleIds = mapUserRoleMapper.selectRIdByUId(user.getId());
-        Map<String, Object> roleIdsParamMap = new HashMap<>();
-        roleIdsParamMap.put("roleIds", roleIds);
-        List<Dict> roles = dictMapper.selectByIds(roleIdsParamMap);
+        List<Dict> roles = dictMapper.selectByIds(roleIds);
+
+        log.debug("roles.size(): " + roles.size());
 
         int size = roles.size();
         String uRole = "";
@@ -150,10 +163,10 @@ public class UserService {
             // 仅有单个角色
             uRole = roles.get(0).getDName();
         } else {
-            // 有多个角色，选择优先级最高的那个角色
+            // 有多个角色，选择优先级最高的那个角色（数字越小优先级越高）
             int pivot = 0;
             for (int i = 1; i < roles.size(); i++) {
-                if (roles.get(i).getPriority() > roles.get(pivot).getPriority()) {
+                if (roles.get(i).getPriority() < roles.get(pivot).getPriority()) {
                     pivot = i;
                 }
             }

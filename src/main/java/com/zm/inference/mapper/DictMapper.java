@@ -23,7 +23,7 @@ public interface DictMapper {
     /**
      * 根据id集合获取Dict集合
      */
-    List<Dict> selectByIds(Map<String, Object> dictIds);
+    List<Dict> selectByIds(List<Integer> dictIds);
 
     /**根据type_id获取所有的d_name*/
     List<IdAndName> selectIdAndDNameByTypeId(@Param("typeId")Integer typeId);

@@ -6,6 +6,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
+
 /**
  * @Description 注册拦截器
  * @Author zm
@@ -14,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
+    @Resource
     private SessionInterceptor sessionInterceptor;
 
     /**
@@ -23,8 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns("/inference")
-                .excludePathPatterns("/user/register","/user/login");
+                .addPathPatterns("/inference/**","/view/**")
+                .excludePathPatterns("/user/register","/user/login","/view/goIndex");
     }
 
     @Override

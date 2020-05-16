@@ -3,20 +3,16 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.BaseController;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.IdAndName;
+import com.zm.inference.domain.PlusUser;
 import com.zm.inference.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @Description TODO
+ * @Description 用户操作相关的控制器
  * @Author zm
  * @Date 2020/5/15 10:11
  **/
@@ -40,7 +36,7 @@ public class UserController extends BaseController {
             @RequestParam("password") String password,
             @RequestParam("roleId") Integer roleId
     ) {
-        if (userService.register(username, password,roleId)) {
+        if (userService.register(username, password, roleId)) {
             return retMsg.Set(MsgType.SUCCESS, null, "注册成功,请登录");
         }
         return retMsg.Set(MsgType.ERROR, null, "用户名重复，请更换");
@@ -53,9 +49,18 @@ public class UserController extends BaseController {
             @RequestParam("password") String password,
             HttpServletRequest request
     ) {
-        if (userService.login(username, password, request)) {
-            return retMsg.Set(MsgType.SUCCESS, null, "登录成功");
+        PlusUser plusUser = userService.login(username, password, request);
+        if (plusUser != null) {
+            return retMsg.Set(MsgType.SUCCESS, plusUser, "登录成功");
         }
         return retMsg.Set(MsgType.ERROR, null, "用户名或密码错误");
+    }
+
+    @GetMapping("/logout")
+    public Object logout(HttpServletRequest request) {
+        if (userService.logout(request)) {
+            return retMsg.Set(MsgType.SUCCESS, null, "登出成功");
+        }
+        return retMsg.Set(MsgType.ERROR, null, "登出失败");
     }
 }

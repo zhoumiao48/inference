@@ -134,3 +134,61 @@ const MsgType = {
     WARNING: 2,
     INFO: 3
 };
+
+// 高度调整
+function adjustHeight() {
+    let height = $(window).height() + "px";
+    document.getElementById("layoutContainer").style.height = height;
+}
+
+// 根据角色返回侧边栏数组
+function showAsideByRole(plusUser) {
+    if (plusUser.role == '管理员') {
+        return;
+    }
+    app.visibility.userManagement = false;
+    app.visibility.dictManagement = false;
+    if (plusUser.role == '普通用户') {
+        app.visibility.ruleManagement = false;
+    }
+}
+
+// 登出
+function logout() {
+    ajaxGet("/user/logout", null, function (d) {
+        if (d.code == 'success') {
+            app.$message({
+                message: d.message,
+                type: 'success'
+            });
+            app.loading = true;
+            setTimeout(function () {
+                window.location.href = "/view/goIndex";
+            }, 500);
+        }
+    })
+}
+
+// 打开登出框
+function openLogout() {
+    app.$confirm('确认登出系统?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(
+        function () {
+            logout();
+        }).catch(() => {
+        app.$message({
+            type: 'info',
+            message: '已取消登出'
+        });
+    });
+}
+
+// 跳转到个人中心页面
+function openUserCenter() {
+    ajaxGet("/view/goUserCenter", null, function (d) {
+
+    })
+}

@@ -139,7 +139,7 @@
         select *
         from dict
         where id in
-        <foreach collection="_parameter" item="id" open="(" close=")" separator=",">
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
             #{id,jdbcType=VARCHAR}
         </foreach>
     </select>

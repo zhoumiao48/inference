@@ -10,8 +10,8 @@
     <!--默认样式-->
     <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{~/plugin/element-ui/lib/theme-chalk/index.css}">
-    <link rel="stylesheet" th:href="@{~/plugin/view-ui/styles/iview.css}">
     <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
 
     <!--首页样式-->
     <link rel="stylesheet" th:href="@{~/plugin/index/css/style.css}">
@@ -116,7 +116,6 @@
 <!--默认js-->
 <script th:src="@{~/plugin/jquery/jquery.js}"></script>
 <script th:src="@{~/plugin/vue/vue.min.js}"></script>
-<script th:src="@{~/plugin/view-ui/iview.min.js}"></script>
 <script th:src="@{~/plugin/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{~/plugin/element-ui/lib/index.js}"></script>
 <script th:src="@{~/js/common.js}"></script>
@@ -189,13 +188,16 @@
         ajaxPost("/user/login", data, function (d) {
             if (d.code === 'success') {
                 app.$message({
-                    message: '登录成功，欢迎回来',
+                    message: d.message + ',欢迎回来：' + d.data.user.uname,
                     type: 'success'
                 });
-                window.location.href = "/view/goSystem"
+                setTimeout(function () {
+                    window.location.href = "/view/goSystem";
+                }, 500);
             } else {
                 app.loading = false;
                 app.$message.error(d.message);
+                clearInput();
             }
         })
     }

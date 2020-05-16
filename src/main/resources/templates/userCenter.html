@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>system</title>
+    <title>用户中心</title>
     <!--默认样式文件-->
     <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{~/plugin/element-ui/lib/theme-chalk/index.css}">
@@ -109,42 +109,6 @@
         },
         methods: {}
     })
-
-    function logout() {
-        console.log("e")
-        ajaxGet("/user/logout", null, function (d) {
-            if (d.code == 'success') {
-                app.$message({
-                    message: d.message,
-                    type: 'success'
-                });
-                app.loading = true;
-                setTimeout(function () {
-                    window.location.href = "/view/goIndex";
-                }, 500);
-            }
-        })
-    }
-
-    function openLogout() {
-        app.$confirm('确认登出系统?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(
-            function () {
-                logout();
-            }).catch(() => {
-            app.$message({
-                type: 'info',
-                message: '已取消登出'
-            });
-        });
-    }
-
-    function openUserCenter() {
-
-    }
 
     window.onload = function () {
         // 调整高度

@@ -26,7 +26,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         log.info("sessionID: "+session.getId());
 
         // 获取用户信息，如果没有用户信息就直接返回提示信息
-        Object userNow = session.getAttribute("user");
+        Object userNow = session.getAttribute("plusUser");
         if (userNow == null){
             log.info("未登录");
             response.getWriter().write("请先登录");
