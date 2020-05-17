@@ -1,5 +1,6 @@
-package com.zm.inference.domain;
+package com.zm.inference.domain.plusClass;
 
+import com.zm.inference.domain.User;
 import lombok.Data;
 
 /**

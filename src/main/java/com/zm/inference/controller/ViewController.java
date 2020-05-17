@@ -1,9 +1,7 @@
 package com.zm.inference.controller;
 
-import com.zm.inference.domain.PlusUser;
-import com.zm.inference.service.UserService;
+import com.zm.inference.domain.plusClass.PlusUser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

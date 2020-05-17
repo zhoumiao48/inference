@@ -3,7 +3,7 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.BaseController;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.IdAndName;
-import com.zm.inference.domain.PlusUser;
+import com.zm.inference.domain.plusClass.PlusUser;
 import com.zm.inference.service.UserService;
 import org.springframework.web.bind.annotation.*;
 

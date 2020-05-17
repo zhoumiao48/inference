@@ -3,11 +3,12 @@ package com.zm.inference.service;
 import com.zm.inference.common.util.Md5Trans;
 import com.zm.inference.common.util.domain.IdAndName;
 import com.zm.inference.domain.*;
+import com.zm.inference.domain.mapClass.MapUserRole;
+import com.zm.inference.domain.plusClass.PlusUser;
 import com.zm.inference.mapper.DictMapper;
 import com.zm.inference.mapper.DictTypeMapper;
 import com.zm.inference.mapper.MapUserRoleMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

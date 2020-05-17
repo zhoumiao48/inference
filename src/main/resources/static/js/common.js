@@ -163,7 +163,7 @@ function logout() {
             });
             app.loading = true;
             setTimeout(function () {
-                window.location.href = "/view/goIndex";
+                window.location.href = '/view/goIndex';
             }, 500);
         }
     })
@@ -187,8 +187,9 @@ function openLogout() {
 }
 
 // 跳转到个人中心页面
-function openUserCenter() {
-    ajaxGet("/view/goUserCenter", null, function (d) {
-
-    })
+function goUserCenter() {
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goUserCenter';
+    }, 500);
 }
