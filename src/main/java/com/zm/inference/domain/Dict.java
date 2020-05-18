@@ -1,13 +1,15 @@
 package com.zm.inference.domain;
 
 import java.util.Date;
+
+import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
 /**
  * 系统字典表
  */
 @Data
-public class Dict {
+public class Dict extends BaseClass {
     private Integer id;
 
     /**
@@ -24,24 +26,4 @@ public class Dict {
      * 优先级
      */
     private Integer priority;
-
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifiedTime;
-
-    /**
-     * 创建人id
-     */
-    private Integer createdUid;
-
-    /**
-     * 修改人id
-     */
-    private Integer modifiedUid;
 }

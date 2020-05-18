@@ -1,5 +1,10 @@
 package com.zm.inference.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Collection;
+
 import com.zm.inference.domain.mapClass.MapRulePattern;
 
 public interface MapRulePatternMapper {
@@ -14,4 +19,10 @@ public interface MapRulePatternMapper {
     int updateByPrimaryKeySelective(MapRulePattern record);
 
     int updateByPrimaryKey(MapRulePattern record);
+
+    List<Integer> selectRIdByPIdIn(@Param("pIdCollection") Collection<Integer> pIdCollection);
+
+    int insertList(@Param("list")List<MapRulePattern> list);
+
+
 }

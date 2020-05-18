@@ -40,11 +40,14 @@ public class ViewController {
         return "index";
     }
 
+    /**
+     * 跳转到个人中心页
+     */
     @GetMapping("/goUserCenter")
     public String goUserCenter(
             Model model,
             HttpServletRequest request
-    ){
+    ) {
         // 在model中添加PlusUser对象
         PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
         model.addAttribute("plusUser", pu);

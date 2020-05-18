@@ -1,4 +1,6 @@
-package com.zm.inference.common.util;
+package com.zm.inference.common.util.domain;
+
+import com.zm.inference.common.util.AjaxMessage;
 
 /**
  * @ClassName BaseController
