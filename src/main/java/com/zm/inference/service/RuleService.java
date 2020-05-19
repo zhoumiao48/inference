@@ -83,7 +83,7 @@ public class RuleService implements RuleServiceInterface {
         }
 
         // 检查数据库中是否已经存在此规则，如果存在直接返回false
-        if(checkRule(frontPatterns) != -1){
+        if (checkRule(frontPatterns) != -1) {
             return false;
         }
 
@@ -98,30 +98,33 @@ public class RuleService implements RuleServiceInterface {
         // 把原有iText中的占位数字字符替换成 pattern_id
         String iText = subRule.getIText();
         String[] symbolArr = iText.split(" ");
+        int index = 0;
         for (int i = 0; i < symbolArr.length; i++) {
             if ("^".equals(symbolArr[i]) || "v".equals(symbolArr[i])) {
                 continue;
             }
-            symbolArr[i] = String.valueOf(frontPatterns.get(i).getId());
+            symbolArr[i] = String.valueOf(frontPatterns.get(index).getId());
+            index++;
         }
-        String modifiedIText = "";
+        StringBuilder modifiedIText = new StringBuilder();
         for (String s : symbolArr) {
-            modifiedIText = s + " ";
+            modifiedIText.append(s).append(" ");
         }
-        subRule.setIText(modifiedIText);
+        subRule.setIText(modifiedIText.toString());
 
         // 中缀表达式转后缀表达式
-        String rText = StringTool.transRTextWithIText(modifiedIText);
+        String rText = StringTool.transRTextWithIText(modifiedIText.toString());
         subRule.setRText(rText);
 
         Date dateNow = new Date();
         subRule.setCreatedTime(dateNow);
         subRule.setModifiedTime(dateNow);
         // 插入新规则
-        Integer newRuleId = ruleMapper.insertSelective(subRule);
+        ruleMapper.insertSelective(subRule);
+        Integer newRuleId = subRule.getId();
         // 插入rule_pattern关联——前件
         List<MapRulePattern> mrpList = new ArrayList<>(frontPatterns.size() + backPatterns.size());
-        for(SubPattern sp:frontPatterns){
+        for (SubPattern sp : frontPatterns) {
             MapRulePattern mrp1 = new MapRulePattern();
             mrp1.setRId(newRuleId);
             mrp1.setPId(sp.getId());
@@ -130,7 +133,7 @@ public class RuleService implements RuleServiceInterface {
             mrpList.add(mrp1);
         }
         // 插入rule_pattern关联——后件
-        for (SubPattern sp:backPatterns){
+        for (SubPattern sp : backPatterns) {
             MapRulePattern mrp2 = new MapRulePattern();
             mrp2.setRId(newRuleId);
             mrp2.setPId(sp.getId());
