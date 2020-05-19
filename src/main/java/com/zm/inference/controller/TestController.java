@@ -2,14 +2,18 @@ package com.zm.inference.controller;
 
 import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.common.util.MsgType;
+import com.zm.inference.domain.Fact;
+import com.zm.inference.domain.Pattern;
 import com.zm.inference.domain.Rule;
+import com.zm.inference.domain.User;
+import com.zm.inference.domain.subClass.SubPattern;
+import com.zm.inference.domain.subClass.SubRule;
 import com.zm.inference.service.RuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description TODO
@@ -21,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TestController extends BaseController {
 
-    //private static final Logger log = LoggerFactory.getLogger(TestController.class);
 
     @Autowired
     private RuleService ruleService;
@@ -45,5 +48,12 @@ public class TestController extends BaseController {
     @GetMapping("goLogin")
     public String goLogin(){
         return "login";
+    }
+
+    @PostMapping("/testResponseBody")
+    public Object testResponseBody(@RequestBody SubRule sp){
+
+        System.out.println(sp);
+        return retMsg.Set(MsgType.SUCCESS,sp,"成功");
     }
 }

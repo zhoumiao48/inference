@@ -25,8 +25,19 @@ public class Fact extends BaseClass {
      */
     private String fValue;
 
-    /**
-     * 可信度or程度
-     */
-    private Double fDegree;
+    public String getfAttribute() {
+        return fAttribute;
+    }
+
+    public void setfAttribute(String fAttribute) {
+        this.fAttribute = fAttribute;
+    }
+
+    public String getfValue() {
+        return fValue;
+    }
+
+    public void setfValue(String fValue) {
+        this.fValue = fValue;
+    }
 }

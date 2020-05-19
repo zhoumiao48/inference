@@ -68,8 +68,8 @@ public class PatternService {
             factIdList.add(fact.getId());
         }
 
-        List<Integer> patternIds = mapPatternFactMapper.selectPIdByFIdIn(factIdList);
-        if (patternIds == null) {
+        List<Integer> patternIds = mapPatternFactMapper.selectDistinctPIdByFIdIn(factIdList);
+        if (patternIds.size() == 0) {
             // 数据库中不存在该模式
             // 插入新模式
             Pattern newPattern = new Pattern();

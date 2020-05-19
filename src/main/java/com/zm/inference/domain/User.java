@@ -13,15 +13,15 @@ public class User extends BaseClass {
     /**
      * 用户主键id
      */
-    private Integer id;
+    protected Integer id;
 
     /**
      * 用户名
      */
-    private String uName;
+    protected String uName;
 
     /**
      * 用户密码
      */
-    private String uPassword;
+    protected String uPassword;
 }

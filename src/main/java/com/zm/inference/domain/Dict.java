@@ -26,4 +26,12 @@ public class Dict extends BaseClass {
      * 优先级
      */
     private Integer priority;
+
+    public String getdName() {
+        return dName;
+    }
+
+    public void setdName(String dName) {
+        this.dName = dName;
+    }
 }

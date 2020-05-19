@@ -162,7 +162,7 @@ public class UserService {
             }
         } else if (size == 1) {
             // 仅有单个角色
-            uRole = roles.get(0).getDName();
+            uRole = roles.get(0).getdName();
         } else {
             // 有多个角色，选择优先级最高的那个角色（数字越小优先级越高）
             int pivot = 0;
@@ -171,7 +171,7 @@ public class UserService {
                     pivot = i;
                 }
             }
-            uRole = roles.get(pivot).getDName();
+            uRole = roles.get(pivot).getdName();
         }
 
         PlusUser pUser = new PlusUser();

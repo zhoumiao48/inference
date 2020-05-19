@@ -7,7 +7,6 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="f_attribute" jdbcType="VARCHAR" property="fAttribute"/>
         <result column="f_value" jdbcType="VARCHAR" property="fValue"/>
-        <result column="f_degree" jdbcType="FLOAT" property="fDegree"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
         <result column="created_uid" jdbcType="INTEGER" property="createdUid"/>
@@ -15,7 +14,7 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, f_attribute, f_value, f_degree, created_time, modified_time, created_uid, modified_uid
+        id, f_attribute, f_value, created_time, modified_time, created_uid, modified_uid
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         <!--@mbg.generated-->
@@ -32,12 +31,12 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Fact"
             useGeneratedKeys="true">
         <!--@mbg.generated-->
-        insert into fact (f_attribute, f_value, f_degree,
+        insert into fact (f_attribute, f_value,
         created_time, modified_time, created_uid,
         modified_uid)
-        values (#{fAttribute,jdbcType=VARCHAR}, #{fValue,jdbcType=VARCHAR}, #{fDegree,jdbcType=FLOAT},
-        #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createdUid,jdbcType=INTEGER},
-        #{modifiedUid,jdbcType=INTEGER})
+        values (#{fAttribute,jdbcType=VARCHAR}, #{fValue,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP},
+        #{createdUid,jdbcType=INTEGER},#{modifiedUid,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Fact"
             useGeneratedKeys="true">
@@ -49,9 +48,6 @@
             </if>
             <if test="fValue != null">
                 f_value,
-            </if>
-            <if test="fDegree != null">
-                f_degree,
             </if>
             <if test="createdTime != null">
                 created_time,
@@ -72,9 +68,6 @@
             </if>
             <if test="fValue != null">
                 #{fValue,jdbcType=VARCHAR},
-            </if>
-            <if test="fDegree != null">
-                #{fDegree,jdbcType=FLOAT},
             </if>
             <if test="createdTime != null">
                 #{createdTime,jdbcType=TIMESTAMP},
@@ -100,9 +93,6 @@
             <if test="fValue != null">
                 f_value = #{fValue,jdbcType=VARCHAR},
             </if>
-            <if test="fDegree != null">
-                f_degree = #{fDegree,jdbcType=FLOAT},
-            </if>
             <if test="createdTime != null">
                 created_time = #{createdTime,jdbcType=TIMESTAMP},
             </if>
@@ -123,7 +113,6 @@
         update fact
         set f_attribute = #{fAttribute,jdbcType=VARCHAR},
         f_value = #{fValue,jdbcType=VARCHAR},
-        f_degree = #{fDegree,jdbcType=FLOAT},
         created_time = #{createdTime,jdbcType=TIMESTAMP},
         modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
         created_uid = #{createdUid,jdbcType=INTEGER},
@@ -135,6 +124,7 @@
     <select id="selectIdByFAttributeAndFValue" resultType="java.lang.Integer">
         select id
         from fact
-        where f_attribute=#{fAttribute,jdbcType=VARCHAR} and f_value=#{fValue,jdbcType=VARCHAR}
+        where f_attribute = #{fAttribute,jdbcType=VARCHAR}
+          and f_value = #{fValue,jdbcType=VARCHAR}
     </select>
 </mapper>

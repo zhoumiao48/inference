@@ -24,7 +24,7 @@ public interface MapPatternFactMapper {
     /**
      * 根据fid的集合来查找对应的pattern_id
      */
-    List<Integer> selectPIdByFIdIn(@Param("fIdCollection") Collection<Integer> fIdCollection);
+    List<Integer> selectDistinctPIdByFIdIn(@Param("fIdCollection") Collection<Integer> fIdCollection);
 
     /**
      * 批量插入（已测试）

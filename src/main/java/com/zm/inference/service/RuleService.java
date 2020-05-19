@@ -96,7 +96,7 @@ public class RuleService implements RuleServiceInterface {
         }
 
         // 把原有iText中的占位数字字符替换成 pattern_id
-        String iText = subRule.getIText();
+        String iText = subRule.getiText();
         String[] symbolArr = iText.split(" ");
         for (int i = 0; i < symbolArr.length; i++) {
             if ("^".equals(symbolArr[i]) || "v".equals(symbolArr[i])) {
@@ -108,11 +108,11 @@ public class RuleService implements RuleServiceInterface {
         for (String s : symbolArr) {
             modifiedIText = s + " ";
         }
-        subRule.setIText(modifiedIText);
+        subRule.setiText(modifiedIText);
 
         // 中缀表达式转后缀表达式
         String rText = StringTool.transRTextWithIText(modifiedIText);
-        subRule.setRText(rText);
+        subRule.setrText(rText);
 
         Date dateNow = new Date();
         subRule.setCreatedTime(dateNow);

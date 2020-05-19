@@ -2,6 +2,7 @@ package com.zm.inference.common.util.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  * @Date 2020/5/17 23:12
  **/
 @Data
-public abstract class BaseClass {
+public abstract class BaseClass implements Serializable{
 
     /**
      * 创建时间

@@ -51,7 +51,7 @@ public class FactService {
     public List<Fact> checkFactList(List<Fact> origFacts) {
 
         for (Fact tmpFact : origFacts) {
-            List<Integer> factIds = factMapper.selectIdByFAttributeAndFValue(tmpFact.getFAttribute(), tmpFact.getFValue());
+            List<Integer> factIds = factMapper.selectIdByFAttributeAndFValue(tmpFact.getfAttribute(), tmpFact.getfValue());
             if (factIds.size() == 1) {
                 // 如果原系统中存在该条事实知识 -> 直接修改fact的值
                 tmpFact.setId(factIds.get(0));

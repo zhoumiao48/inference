@@ -19,4 +19,12 @@ public class DictType extends BaseClass {
     * 字典项类型名称
     */
     private String tName;
+
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName;
+    }
 }

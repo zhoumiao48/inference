@@ -13,20 +13,36 @@ public class Rule extends BaseClass {
     /**
      * 规则主键id
      */
-    private Integer id;
+    protected Integer id;
 
     /**
      * 规则内容(中缀表达式)
      */
-    private String iText;
+    protected String iText;
 
     /**
      * 规则内容(后缀表达式)
      */
-    private String rText;
+    protected String rText;
 
     /**
      * 规则优先级
      */
-    private Double priority;
+    protected Double priority;
+
+    public String getiText() {
+        return iText;
+    }
+
+    public String getrText() {
+        return rText;
+    }
+
+    public void setiText(String iText) {
+        this.iText = iText;
+    }
+
+    public void setrText(String rText) {
+        this.rText = rText;
+    }
 }

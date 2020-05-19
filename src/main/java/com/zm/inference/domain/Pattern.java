@@ -13,17 +13,16 @@ public class Pattern extends BaseClass {
     /**
      * 主键id
      */
-    private Integer id;
+    protected Integer id;
 
     /**
-     * 模式的权值（数值越小权值越大）
+     * 模式的权值
      */
-    private Float priority;
+    protected Float priority;
 
     /**
      * 0：该pattern对应单个fact
      * 1：该pattern对应多个fact
      */
-    private Byte isMulti;
-
+    protected Byte isMulti;
 }
