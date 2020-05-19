@@ -2,6 +2,7 @@ package com.zm.inference.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class Dict extends BaseClass {
     /**
      * 字典项名称
      */
+    @JsonProperty("dName")
     private String dName;
 
     /**
@@ -26,12 +28,4 @@ public class Dict extends BaseClass {
      * 优先级
      */
     private Integer priority;
-
-    public String getdName() {
-        return dName;
-    }
-
-    public void setdName(String dName) {
-        this.dName = dName;
-    }
 }

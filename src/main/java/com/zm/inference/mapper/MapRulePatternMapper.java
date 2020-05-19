@@ -20,9 +20,7 @@ public interface MapRulePatternMapper {
 
     int updateByPrimaryKey(MapRulePattern record);
 
-    List<Integer> selectRIdByPIdIn(@Param("pIdCollection") Collection<Integer> pIdCollection);
-
     int insertList(@Param("list")List<MapRulePattern> list);
 
-
+    List<Integer> selectDistinctRIdByPIdIn(@Param("pIdCollection")Collection<Integer> pIdCollection);
 }

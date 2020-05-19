@@ -60,7 +60,7 @@ public class PatternService {
      * @return 返回查找后的Pattern的Id或者是插入Pattern后的id
      * @author zm
      */
-    public Integer checkPattern(List<Fact> factList, Float patternPriority) {
+    public Integer checkPattern(List<Fact> factList, Double patternPriority) {
         int size = factList.size();
         List<Integer> factIdList = new ArrayList<>(size);
 
@@ -71,11 +71,13 @@ public class PatternService {
         List<Integer> patternIds = mapPatternFactMapper.selectDistinctPIdByFIdIn(factIdList);
         if (patternIds.size() == 0) {
             // 数据库中不存在该模式
-            // 插入新模式
+            // 插入该新模式
             Pattern newPattern = new Pattern();
             newPattern.setIsMulti((byte) (size > 1 ? 1 : 0));
-            newPattern.setPriority(patternPriority);
-            Integer newPatternId = patternMapper.insertSelective(newPattern);
+            newPattern.setWeight(patternPriority);
+            patternMapper.insertSelective(newPattern);
+            Integer newPatternId = newPattern.getId();
+
             // 插入map_pattern_fact
             List<MapPatternFact> patternFactList = new ArrayList<>();
             for (Integer factId : factIdList) {
@@ -87,8 +89,7 @@ public class PatternService {
             mapPatternFactMapper.insertList(patternFactList);
 
             return newPatternId;
-        } else {
-            // 数据库中存在该模式，直接返回该pattern的id
+        }else{
             return patternIds.get(0);
         }
     }

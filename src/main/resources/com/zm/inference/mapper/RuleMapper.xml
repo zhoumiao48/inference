@@ -7,7 +7,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="i_text" jdbcType="VARCHAR" property="iText" />
     <result column="r_text" jdbcType="VARCHAR" property="rText" />
-    <result column="priority" jdbcType="FLOAT" property="priority" />
+    <result column="degree" jdbcType="FLOAT" property="degree" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
     <result column="created_uid" jdbcType="INTEGER" property="createdUid" />
@@ -15,7 +15,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, i_text, r_text, priority, created_time, modified_time, created_uid, modified_uid
+    id, i_text, r_text, degree, created_time, modified_time, created_uid, modified_uid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -31,10 +31,10 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Rule" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into `rule` (i_text, r_text, priority, 
+    insert into `rule` (i_text, r_text, degree,
       created_time, modified_time, created_uid, 
       modified_uid)
-    values (#{iText,jdbcType=VARCHAR}, #{rText,jdbcType=VARCHAR}, #{priority,jdbcType=FLOAT}, 
+    values (#{iText,jdbcType=VARCHAR}, #{rText,jdbcType=VARCHAR}, #{degree,jdbcType=FLOAT},
       #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createdUid,jdbcType=INTEGER}, 
       #{modifiedUid,jdbcType=INTEGER})
   </insert>
@@ -48,8 +48,8 @@
       <if test="rText != null">
         r_text,
       </if>
-      <if test="priority != null">
-        priority,
+      <if test="degree != null">
+        degree,
       </if>
       <if test="createdTime != null">
         created_time,
@@ -71,8 +71,8 @@
       <if test="rText != null">
         #{rText,jdbcType=VARCHAR},
       </if>
-      <if test="priority != null">
-        #{priority,jdbcType=FLOAT},
+      <if test="degree != null">
+        #{degree,jdbcType=FLOAT},
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
@@ -98,8 +98,8 @@
       <if test="rText != null">
         r_text = #{rText,jdbcType=VARCHAR},
       </if>
-      <if test="priority != null">
-        priority = #{priority,jdbcType=FLOAT},
+      <if test="degree != null">
+        degree = #{degree,jdbcType=FLOAT},
       </if>
       <if test="createdTime != null">
         created_time = #{createdTime,jdbcType=TIMESTAMP},
@@ -121,7 +121,7 @@
     update `rule`
     set i_text = #{iText,jdbcType=VARCHAR},
       r_text = #{rText,jdbcType=VARCHAR},
-      priority = #{priority,jdbcType=FLOAT},
+      degree = #{degree,jdbcType=FLOAT},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
       created_uid = #{createdUid,jdbcType=INTEGER},

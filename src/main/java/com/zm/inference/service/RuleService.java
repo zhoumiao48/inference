@@ -79,11 +79,11 @@ public class RuleService implements RuleServiceInterface {
             // 给factList中的fact添加上id（后一步需要根据fact_id来判断数据库中是否存在pattern）
             tmpPattern.setFactList(factService.checkFactList(factList));
             // 给frontPatterns中的每一个SubPattern添加上id
-            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getPriority()));
+            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getWeight()));
         }
 
         // 检查数据库中是否已经存在此规则，如果存在直接返回false
-        if(checkRule(frontPatterns) == -1){
+        if(checkRule(frontPatterns) != -1){
             return false;
         }
 
@@ -92,11 +92,11 @@ public class RuleService implements RuleServiceInterface {
                 backPatterns) {
             List<Fact> factList = tmpPattern.getFactList();
             tmpPattern.setFactList(factService.checkFactList(factList));
-            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getPriority()));
+            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getWeight()));
         }
 
         // 把原有iText中的占位数字字符替换成 pattern_id
-        String iText = subRule.getiText();
+        String iText = subRule.getIText();
         String[] symbolArr = iText.split(" ");
         for (int i = 0; i < symbolArr.length; i++) {
             if ("^".equals(symbolArr[i]) || "v".equals(symbolArr[i])) {
@@ -108,11 +108,11 @@ public class RuleService implements RuleServiceInterface {
         for (String s : symbolArr) {
             modifiedIText = s + " ";
         }
-        subRule.setiText(modifiedIText);
+        subRule.setIText(modifiedIText);
 
         // 中缀表达式转后缀表达式
         String rText = StringTool.transRTextWithIText(modifiedIText);
-        subRule.setrText(rText);
+        subRule.setRText(rText);
 
         Date dateNow = new Date();
         subRule.setCreatedTime(dateNow);
@@ -149,7 +149,7 @@ public class RuleService implements RuleServiceInterface {
         for (SubPattern frontPattern : frontPatterns) {
             patternIds.add(frontPattern.getId());
         }
-        List<Integer> ruleIdList = mapRulePatternMapper.selectRIdByPIdIn(patternIds);
+        List<Integer> ruleIdList = mapRulePatternMapper.selectDistinctRIdByPIdIn(patternIds);
         if (ruleIdList.size() == 1) {
             return ruleIdList.get(0);
         }

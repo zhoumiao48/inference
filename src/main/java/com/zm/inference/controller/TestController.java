@@ -51,9 +51,17 @@ public class TestController extends BaseController {
     }
 
     @PostMapping("/testResponseBody")
-    public Object testResponseBody(@RequestBody SubRule sp){
+    public Object testResponseBody(@RequestBody SubRule sr){
+
+        System.out.println(sr);
+        return retMsg.Set(MsgType.SUCCESS,sr,"成功");
+    }
+
+    @PostMapping("/testResponseBody2")
+    public Object testResponseBody2(@RequestBody Pattern sp){
 
         System.out.println(sp);
+
         return retMsg.Set(MsgType.SUCCESS,sp,"成功");
     }
 }

@@ -1,7 +1,6 @@
 package com.zm.inference.domain;
 
-import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
@@ -18,7 +17,7 @@ public class Pattern extends BaseClass {
     /**
      * 模式的权值
      */
-    protected Float priority;
+    protected Double weight;
 
     /**
      * 0：该pattern对应单个fact

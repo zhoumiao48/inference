@@ -2,6 +2,7 @@ package com.zm.inference.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
@@ -18,31 +19,17 @@ public class Rule extends BaseClass {
     /**
      * 规则内容(中缀表达式)
      */
+    @JsonProperty("iText")
     protected String iText;
 
     /**
      * 规则内容(后缀表达式)
      */
+    @JsonProperty("rText")
     protected String rText;
 
     /**
-     * 规则优先级
+     * 规则强度
      */
-    protected Double priority;
-
-    public String getiText() {
-        return iText;
-    }
-
-    public String getrText() {
-        return rText;
-    }
-
-    public void setiText(String iText) {
-        this.iText = iText;
-    }
-
-    public void setrText(String rText) {
-        this.rText = rText;
-    }
+    protected Double degree;
 }

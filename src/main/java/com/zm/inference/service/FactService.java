@@ -51,14 +51,15 @@ public class FactService {
     public List<Fact> checkFactList(List<Fact> origFacts) {
 
         for (Fact tmpFact : origFacts) {
-            List<Integer> factIds = factMapper.selectIdByFAttributeAndFValue(tmpFact.getfAttribute(), tmpFact.getfValue());
+            List<Integer> factIds = factMapper.selectIdByFAttributeAndFValue(
+                    tmpFact.getFAttribute(), tmpFact.getFValue());
             if (factIds.size() == 1) {
                 // 如果原系统中存在该条事实知识 -> 直接修改fact的值
                 tmpFact.setId(factIds.get(0));
             }else{
                 // 原系统中不存在该条事实知识 -> 需要进行事实知识的插入，插入之后同样需要把原有的fact对象加上id值
-                Integer id = insertSelective(tmpFact);
-                tmpFact.setId(id);
+                // 这里的insertSelective默认就会把tmpFact加上id
+                insertSelective(tmpFact);
             }
         }
         // 返回添加了id之后的事实列表

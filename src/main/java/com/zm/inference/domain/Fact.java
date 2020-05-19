@@ -2,6 +2,7 @@ package com.zm.inference.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
@@ -18,26 +19,12 @@ public class Fact extends BaseClass {
     /**
      * 对象属性
      */
+    @JsonProperty("fAttribute")
     private String fAttribute;
 
     /**
      * 属性值
      */
+    @JsonProperty("fValue")
     private String fValue;
-
-    public String getfAttribute() {
-        return fAttribute;
-    }
-
-    public void setfAttribute(String fAttribute) {
-        this.fAttribute = fAttribute;
-    }
-
-    public String getfValue() {
-        return fValue;
-    }
-
-    public void setfValue(String fValue) {
-        this.fValue = fValue;
-    }
 }
