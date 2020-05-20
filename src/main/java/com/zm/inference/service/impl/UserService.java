@@ -1,4 +1,4 @@
-package com.zm.inference.service;
+package com.zm.inference.service.impl;
 
 import com.zm.inference.common.util.Md5Trans;
 import com.zm.inference.common.util.domain.IdAndName;

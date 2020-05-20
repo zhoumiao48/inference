@@ -1,8 +1,9 @@
-package com.zm.inference.service.Interface;
+package com.zm.inference.service;
 
 import com.zm.inference.domain.subClass.SubPattern;
 import com.zm.inference.domain.subClass.SubRule;
 
+import java.beans.Transient;
 import java.util.List;
 
 public interface RuleServiceInterface {
@@ -15,6 +16,7 @@ public interface RuleServiceInterface {
      * @author zm
      * @date 2020/5/18 22:44
      **/
+    @Transient
     Boolean addNewRule(SubRule subRule);
 
     /**

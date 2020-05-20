@@ -4,7 +4,7 @@ import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.IdAndName;
 import com.zm.inference.domain.plusClass.PlusUser;
-import com.zm.inference.service.UserService;
+import com.zm.inference.service.impl.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

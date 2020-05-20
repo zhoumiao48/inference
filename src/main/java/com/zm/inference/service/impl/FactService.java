@@ -1,4 +1,4 @@
-package com.zm.inference.service;
+package com.zm.inference.service.impl;
 
 import org.springframework.stereotype.Service;
 

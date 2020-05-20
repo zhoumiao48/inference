@@ -1,11 +1,6 @@
 package com.zm.inference.mapper;
 
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
-import java.util.Collection;
-
-import com.zm.inference.domain.mapClass.MapRulePattern;
+import com.zm.inference.domain.mapClass.MapRulePattern;import org.apache.ibatis.annotations.Param;import java.util.Collection;import java.util.List;
 
 public interface MapRulePatternMapper {
     int deleteByPrimaryKey(Integer id);

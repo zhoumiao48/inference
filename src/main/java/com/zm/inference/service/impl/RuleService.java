@@ -1,13 +1,12 @@
-package com.zm.inference.service;
+package com.zm.inference.service.impl;
 
 import com.zm.inference.common.util.StringTool;
 import com.zm.inference.domain.Fact;
 import com.zm.inference.domain.mapClass.MapRulePattern;
-import com.zm.inference.domain.plusClass.PlusUser;
 import com.zm.inference.domain.subClass.SubPattern;
 import com.zm.inference.domain.subClass.SubRule;
 import com.zm.inference.mapper.MapRulePatternMapper;
-import com.zm.inference.service.Interface.RuleServiceInterface;
+import com.zm.inference.service.RuleServiceInterface;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -65,7 +64,6 @@ public class RuleService implements RuleServiceInterface {
     }
 
     @Override
-    @Transient
     public Boolean addNewRule(SubRule subRule) {
         // step1：首先看规则中所含的事实fact是否存在于系统中，如果不存在就需要进行插入，然后都需要给fact加上id值
         List<SubPattern> frontPatterns = subRule.getFrontPatternList();
@@ -79,7 +77,7 @@ public class RuleService implements RuleServiceInterface {
             // 给factList中的fact添加上id（后一步需要根据fact_id来判断数据库中是否存在pattern）
             tmpPattern.setFactList(factService.checkFactList(factList));
             // 给frontPatterns中的每一个SubPattern添加上id
-            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getWeight()));
+            tmpPattern.setId(patternService.checkPattern(factList));
         }
 
         // 检查数据库中是否已经存在此规则，如果存在直接返回false
@@ -92,7 +90,7 @@ public class RuleService implements RuleServiceInterface {
                 backPatterns) {
             List<Fact> factList = tmpPattern.getFactList();
             tmpPattern.setFactList(factService.checkFactList(factList));
-            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getWeight()));
+            tmpPattern.setId(patternService.checkPattern(factList));
         }
 
         // 把原有iText中的占位数字字符替换成 pattern_id
@@ -122,21 +120,23 @@ public class RuleService implements RuleServiceInterface {
         // 插入新规则
         ruleMapper.insertSelective(subRule);
         Integer newRuleId = subRule.getId();
-        // 插入rule_pattern关联——前件
+        // 插入map_rule_pattern关联——前件
         List<MapRulePattern> mrpList = new ArrayList<>(frontPatterns.size() + backPatterns.size());
         for (SubPattern sp : frontPatterns) {
             MapRulePattern mrp1 = new MapRulePattern();
             mrp1.setRId(newRuleId);
             mrp1.setPId(sp.getId());
+            mrp1.setWeight(sp.getWeight());
             // 0代表是前件
             mrp1.setIsFront((byte) 0);
             mrpList.add(mrp1);
         }
-        // 插入rule_pattern关联——后件
+        // 插入map_rule_pattern关联——后件
         for (SubPattern sp : backPatterns) {
             MapRulePattern mrp2 = new MapRulePattern();
             mrp2.setRId(newRuleId);
             mrp2.setPId(sp.getId());
+            mrp2.setWeight(sp.getWeight());
             // 其代表是后件
             mrp2.setIsFront((byte) 1);
             mrpList.add(mrp2);

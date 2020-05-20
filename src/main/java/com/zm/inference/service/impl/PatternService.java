@@ -1,4 +1,4 @@
-package com.zm.inference.service;
+package com.zm.inference.service.impl;
 
 import com.zm.inference.domain.Fact;
 import com.zm.inference.domain.mapClass.MapPatternFact;
@@ -56,11 +56,10 @@ public class PatternService {
      * 检查当前模式是否记录在数据库中，如果模式存在则返回pattern_id，不存在则插入之后返回pattern_id
      *
      * @param factList        该模式对应的fact列表
-     * @param patternPriority 该模式的权重
      * @return 返回查找后的Pattern的Id或者是插入Pattern后的id
      * @author zm
      */
-    public Integer checkPattern(List<Fact> factList, Double patternPriority) {
+    public Integer checkPattern(List<Fact> factList) {
         int size = factList.size();
         List<Integer> factIdList = new ArrayList<>(size);
 
@@ -74,7 +73,8 @@ public class PatternService {
             // 插入该新模式
             Pattern newPattern = new Pattern();
             newPattern.setIsMulti((byte) (size > 1 ? 1 : 0));
-            newPattern.setWeight(patternPriority);
+            // 修改：模式权值放在map_rule_pattern中
+            // newPattern.setWeight(patternPriority);
             patternMapper.insertSelective(newPattern);
             Integer newPatternId = newPattern.getId();
 

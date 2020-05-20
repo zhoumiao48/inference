@@ -5,7 +5,6 @@
         <!--@mbg.generated-->
         <!--@Table pattern-->
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="weight" jdbcType="DOUBLE" property="weight"/>
         <result column="is_multi" jdbcType="TINYINT" property="isMulti"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
@@ -14,7 +13,7 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, weight, is_multi, created_time, modified_time, created_uid, modified_uid
+        id, is_multi, created_time, modified_time, created_uid, modified_uid
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         <!--@mbg.generated-->
@@ -31,10 +30,10 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Pattern"
             useGeneratedKeys="true">
         <!--@mbg.generated-->
-        insert into pattern (weight, is_multi, created_time,
+        insert into pattern (is_multi, created_time,
         modified_time, created_uid, modified_uid
         )
-        values (#{weight,jdbcType=DOUBLE}, #{isMulti,jdbcType=TINYINT}, #{createdTime,jdbcType=TIMESTAMP},
+        values (#{isMulti,jdbcType=TINYINT}, #{createdTime,jdbcType=TIMESTAMP},
         #{modifiedTime,jdbcType=TIMESTAMP}, #{createdUid,jdbcType=INTEGER}, #{modifiedUid,jdbcType=INTEGER}
         )
     </insert>
@@ -43,9 +42,6 @@
         <!--@mbg.generated-->
         insert into pattern
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="weight != null">
-                weight,
-            </if>
             <if test="isMulti != null">
                 is_multi,
             </if>
@@ -63,9 +59,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="weight != null">
-                #{weight,jdbcType=DOUBLE},
-            </if>
             <if test="isMulti != null">
                 #{isMulti,jdbcType=TINYINT},
             </if>
@@ -87,9 +80,6 @@
         <!--@mbg.generated-->
         update pattern
         <set>
-            <if test="weight != null">
-                weight = #{weight,jdbcType=DOUBLE},
-            </if>
             <if test="isMulti != null">
                 is_multi = #{isMulti,jdbcType=TINYINT},
             </if>
@@ -111,8 +101,7 @@
     <update id="updateByPrimaryKey" parameterType="com.zm.inference.domain.Pattern">
         <!--@mbg.generated-->
         update pattern
-        set weight = #{weight,jdbcType=DOUBLE},
-        is_multi = #{isMulti,jdbcType=TINYINT},
+        set is_multi = #{isMulti,jdbcType=TINYINT},
         created_time = #{createdTime,jdbcType=TIMESTAMP},
         modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
         created_uid = #{createdUid,jdbcType=INTEGER},

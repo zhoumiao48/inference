@@ -13,6 +13,12 @@ import java.util.List;
  **/
 @Data
 public class SubPattern extends Pattern {
+
+    /**
+     * 特定规则中某条模式的权值
+     */
+    private Double weight;
+
     /**
      * 模式对应的事实
      */

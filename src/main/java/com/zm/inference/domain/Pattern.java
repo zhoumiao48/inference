@@ -15,11 +15,6 @@ public class Pattern extends BaseClass {
     protected Integer id;
 
     /**
-     * 模式的权值
-     */
-    protected Double weight;
-
-    /**
      * 0：该pattern对应单个fact
      * 1：该pattern对应多个fact
      */

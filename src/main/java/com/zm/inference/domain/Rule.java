@@ -1,13 +1,12 @@
 package com.zm.inference.domain;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
 /**
  * 规则知识表
+ * @author zm
  */
 @Data
 public class Rule extends BaseClass {
@@ -29,7 +28,7 @@ public class Rule extends BaseClass {
     protected String rText;
 
     /**
-     * 规则强度
+     * 规则强度（用于冲突消解时候后件模式的weight相同时候比较，选定出强度高的那条规则进行激活）
      */
     protected Double degree;
 }
