@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>录入规则</title>
+    <!--默认样式文件-->
+    <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
+    <!--<link rel="stylesheet" th:href="@{~/plugin/element-ui/lib/theme-chalk/index.css}">-->
+    <link rel="stylesheet" th:href="@{~/plugin/element-ui-recently/index.css}">
+    <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
+    <link rel="stylesheet" th:href="@{~/css/sideBar.css}">
+
+    <!--当前页样式-->
+    <style>
+        span {
+            font-size: 14px;
+        }
+
+        .el-header {
+            background-color: #9fabba;
+            color: #282525;
+            line-height: 60px;
+        }
+
+        .el-footer {
+            background-color: #9fabba;
+        }
+    </style>
+</head>
+<body onload="document.body.style.opacity='1'">
+<!--背景图片-->
+
+<div id="app">
+
+    <el-container id="layoutContainer" style="border: 1px solid #eee">
+        <el-aside width="200" style="background-color: #5d636a">
+            <el-menu :default-openeds="['3','4']"
+                     background-color="#545c64"
+                     text-color="#fff"
+                     active-text-color="#ffd04b">
+                <el-submenu index="1" v-show="visibility.userManagement">
+                    <template slot="title">
+                        <i class="el-icon-user-solid"></i>用户管理
+                    </template>
+                    <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>添加用户</el-menu-item>
+                    <el-menu-item index="1-2"><i class="el-icon-caret-right"></i>用户列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="2" v-show="visibility.dictManagement">
+                    <template slot="title"><i class="el-icon-s-management"></i>字典管理</template>
+                    <el-menu-item index="2-1"><i class="el-icon-caret-right"></i>字典类型</el-menu-item>
+                    <el-menu-item index="2-2"><i class="el-icon-caret-right"></i>字典项</el-menu-item>
+                </el-submenu>
+                <el-submenu index="3" v-show="visibility.ruleManagement">
+                    <template slot="title"><i class="el-icon-collection"></i>规则管理</template>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>新增规则</el-menu-item>
+                    <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="4" v-show="visibility.factManagement">
+                    <template slot="title"><i class="el-icon-document"></i>事实管理</template>
+                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goInference">事实推理</a>
+                    </el-menu-item>
+                    <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <el-container v-loading="loading"
+                      element-loading-text="正在加载中"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(128, 128, 128,0.8)">
+            <el-header style="text-align: right; font-size: 12px">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><a @click="goUserCenter">个人中心</a></el-dropdown-item>
+                        <el-dropdown-item><a @click="openLogout">登出系统</a></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <span>你好：{{plusUser.user.uName}}</span>
+            </el-header>
+
+            <!--主体部分-->
+            <el-main>
+                规则前件
+                <el-button size="small"
+                           @click="addFrontPattern"
+                           type="success" plain>新增前件模式</el-button>
+                <div class="block" style="margin-top: 10px;"
+                     v-for="(item,index) in frontPatternList" :key="item.guid">
+                    <el-row type="flex" :gutter="20" align="middle">
+                        <el-cpl :span="2">
+                            <span style="margin-left: 10px">模式{{index+1}}：</span>
+                        </el-cpl>
+                        <el-col :span="3">
+                            <template>
+                                <el-radio v-model="frontPatternList[index].radio" label="1">合取</el-radio>
+                                <el-radio v-model="frontPatternList[index].radio" label="2">析取</el-radio>
+                            </template>
+                        </el-col>
+                        <el-cpl :span="2">
+                            <el-input-number
+                                    v-model="frontPatternList[index].weight"
+                                    controls-position="right"
+                                    placeholder="请输入模式权重"
+                                    :precision="2"
+                                    :step="0.1"
+                                    :min="-1" :max="1"></el-input-number>
+                        </el-cpl>
+                        <el-col :span="6">
+                            <el-input v-model="frontPatternList[index].property" placeholder="请输入对象属性"></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-input v-model="frontPatternList[index].value" placeholder="请输入属性值(多值用空格隔开)"></el-input>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button size="small" type="danger" plain
+                                       @click="deleteFrontPattern(index)">删除</el-button>
+                        </el-col>
+                    </el-row>
+                </div>
+
+                <el-divider></el-divider>
+                规则后件
+
+                <div class="block" style="margin-top: 10px;">
+                    <el-row type="flex" :gutter="20" align="middle">
+                        <el-cpl :span="2">
+                            <span style="margin-left: 10px">后&nbsp;&nbsp;件：</span>
+                        </el-cpl>
+                        <el-col :span="3">
+                            <template>
+                                <el-radio v-model="backPattern.radio" label="1">合取</el-radio>
+                                <el-radio v-model="backPattern.radio" label="2">析取</el-radio>
+                            </template>
+                        </el-col>
+                        <el-cpl :span="2">
+                            <el-input-number
+                                    v-model="backPattern.weight"
+                                    controls-position="right"
+                                    placeholder="请输入模式权重"
+                                    :precision="2"
+                                    :step="0.1"
+                                    :min="-1" :max="1"></el-input-number>
+                        </el-cpl>
+                        <el-col :span="6">
+                            <el-input v-model="backPattern.property" placeholder="请输入对象属性"></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-input v-model="backPattern.value" placeholder="请输入属性值(多值用空格隔开)"></el-input>
+                        </el-col>
+                    </el-row>
+                </div>
+
+                <el-divider></el-divider>
+                中缀表达式（注意用空格隔开每一个字符)
+                <div class="block" style="margin-top: 10px;">
+                    <el-row type="flex" :gutter="20" align="middle">
+                        <el-col :span="13">
+                            <el-input v-model="input.infixExpression"
+                                      placeholder="请输入中缀表达式"></el-input>
+                        </el-col>
+                    </el-row>
+                </div>
+
+                <el-divider></el-divider>
+                <el-button type="primary">录入规则</el-button>
+            </el-main>
+
+
+            <el-footer>
+
+            </el-footer>
+        </el-container>
+    </el-container>
+</div>
+
+<!--默认js文件-->
+<script th:src="@{~/plugin/jquery/jquery.js}"></script>
+<script th:src="@{~/plugin/vue/vue.min.js}"></script>
+<script th:src="@{~/plugin/bootstrap/js/bootstrap.min.js}"></script>
+<!--<script th:src="@{~/plugin/element-ui/lib/index.js}"></script>-->
+<script th:src="@{~/plugin/element-ui-recently/index.js}"></script>
+<script th:src="@{~/js/common.js}"></script>
+<script th:inline="javascript">
+    var app = new Vue({
+        el: "#app",
+        data: {
+            // plusUser存储的是当前已登录的用户信息
+            plusUser: [[${plusUser}]],
+            loading: false,
+            visibility: {
+                userManagement: true,
+                dictManagement: true,
+                ruleManagement: true,
+                factManagement: true
+            },
+            frontPatternList: [{guid: "xxx"}],
+            backPattern:{
+                radio:1,
+                property:"",
+                value:"",
+                weight:0
+            },
+            input: {
+                infixExpression: '',
+            }
+        },
+        methods: {}
+    })
+
+    function addFrontPattern() {
+        app.frontPatternList.push({guid: generateUUID()})
+    }
+
+    function deleteFrontPattern(index) {
+        app.frontPatternList.splice(index, 1);
+    }
+
+    window.onload = function () {
+        // 调整高度
+        adjustHeight();
+        // 根据用户角色判定侧边栏
+        showAsideByRole(app.plusUser);
+    }
+</script>
+</body>
+</html>

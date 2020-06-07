@@ -53,4 +53,31 @@ public class ViewController {
         model.addAttribute("plusUser", pu);
         return "userCenter";
     }
+
+    /**
+     * 跳转到推理页面
+     */
+    @GetMapping("/goInference")
+    public String goInference(
+            Model model,
+            HttpServletRequest request
+    ) {
+        // 在model中添加PlusUser对象
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "inference";
+    }
+
+    /**
+     * 跳转到添加规则页面
+     */
+    @GetMapping("/goAddRule")
+    public String goAddRule(
+            Model model,
+            HttpServletRequest request
+    ) {
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "addRule";
+    }
 }

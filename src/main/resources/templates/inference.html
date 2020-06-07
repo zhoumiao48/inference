@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>system</title>
+    <!--默认样式文件-->
+    <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
+    <!--<link rel="stylesheet" th:href="@{~/plugin/element-ui/lib/theme-chalk/index.css}">-->
+    <link rel="stylesheet" th:href="@{~/plugin/element-ui-recently/index.css}">
+    <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
+    <link rel="stylesheet" th:href="@{~/css/sideBar.css}">
+
+    <!--当前页样式-->
+    <style>
+        span {
+            font-size: 14px;
+        }
+
+        .el-header {
+            background-color: #9fabba;
+            color: #282525;
+            line-height: 60px;
+        }
+
+        .el-footer {
+            background-color: #9fabba;
+        }
+
+        .el-row {
+            margin-bottom: 20px;
+        }
+
+        .el-col {
+            border-radius: 4px;
+        }
+
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+
+        .bg-purple {
+            background: #d3dce6;
+        }
+
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 545px;
+            padding: 10px 10px 10px 10px;
+        }
+
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+    </style>
+
+    <style>
+        #factInput {
+            padding: 10px 10px 10px 10px;
+        }
+
+        .pattern-input .el-input__inner {
+            width: 400px;
+        }
+    </style>
+</head>
+<body onload="document.body.style.opacity='1'">
+<div id="app">
+
+    <el-container id="layoutContainer" style="border: 1px solid #eee">
+        <el-aside width="200" style="background-color: #5d636a">
+            <el-menu :default-openeds="['3','4']"
+                     background-color="#545c64"
+                     text-color="#fff"
+                     active-text-color="#ffd04b">
+                <el-submenu index="1" v-show="visibility.userManagement">
+                    <template slot="title">
+                        <i class="el-icon-user-solid"></i>用户管理
+                    </template>
+                    <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>添加用户</el-menu-item>
+                    <el-menu-item index="1-2"><i class="el-icon-caret-right"></i>用户列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="2" v-show="visibility.dictManagement">
+                    <template slot="title"><i class="el-icon-s-management"></i>字典管理</template>
+                    <el-menu-item index="2-1"><i class="el-icon-caret-right"></i>字典类型</el-menu-item>
+                    <el-menu-item index="2-2"><i class="el-icon-caret-right"></i>字典项</el-menu-item>
+                </el-submenu>
+                <el-submenu index="3" v-show="visibility.ruleManagement">
+                    <template slot="title"><i class="el-icon-collection"></i>规则管理</template>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>新增规则</el-menu-item>
+                    <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="4" v-show="visibility.factManagement">
+                    <template slot="title"><i class="el-icon-document"></i>事实管理</template>
+                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>事实推理</el-menu-item>
+                    <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <el-container v-loading="loading"
+                      element-loading-text="正在加载中"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(128, 128, 128,0.8)">
+            <el-header style="text-align: right; font-size: 12px">
+                <el-dropdown>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><a @click="goUserCenter">个人中心</a></el-dropdown-item>
+                        <el-dropdown-item><a @click="openLogout">登出系统</a></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <span>你好：{{plusUser.user.uName}}</span>
+            </el-header>
+
+            <el-main>
+                <el-row :gutter="20">
+                    <el-col :span="16">
+                        <div class="grid-content bg-purple">
+                            事实录入
+
+                            <div class="block"
+                                 style="margin-top: 10px"
+                                 v-for="(item,index) in selectionPatternList" :key="item.guid">
+                                <span class="demonstration">模 式: {{index+1}}</span>
+                                <el-cascader
+                                        placeholder="请选择符合条件的事实"
+                                        :options="patternOptions"
+                                        class="pattern-input"
+                                        :props="props"
+                                        @change="handlePatternSelect"
+                                        clearable></el-cascader>
+                                <el-input-number
+                                        v-model="weight[index]"
+                                        controls-position="right"
+                                        placeholder="模式权重"
+                                        :precision="2"
+                                        :step="0.1"
+                                        :min="-1" :max="1"></el-input-number>
+                                <el-button
+                                        plain
+                                        type="danger"
+                                        @click="deleteSelectionCondition(index)"
+                                        icon="el-icon-minus"></el-button>
+                                <el-button
+                                        plain
+                                        v-show="index==selectionPatternList.length-1"
+                                        type="primary"
+                                        @click="addNewSelectionTask"
+                                        icon="el-icon-plus"></el-button>
+                            </div>
+
+                            <el-divider></el-divider>
+
+                            <el-button
+                                    @click="doInference"
+                                    type="primary"
+                                    :loading="resLoading">结果推导
+                            </el-button>
+                        </div>
+                    </el-col>
+                    <el-col :span="8">
+                        <div class="grid-content bg-purple">
+                            推理结果
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-main>
+            <el-footer>
+
+            </el-footer>
+        </el-container>
+    </el-container>
+</div>
+
+<!--默认js文件-->
+<script th:src="@{~/plugin/jquery/jquery.js}"></script>
+<script th:src="@{~/plugin/vue/vue.min.js}"></script>
+<script th:src="@{~/plugin/bootstrap/js/bootstrap.min.js}"></script>
+<!--<script th:src="@{~/plugin/element-ui/lib/index.js}"></script>-->
+<script th:src="@{~/plugin/element-ui-recently/index.js}"></script>
+<script th:src="@{~/js/common.js}"></script>
+<script th:inline="javascript">
+    var app = new Vue({
+        el: "#app",
+        data: {
+            // plusUser存储的是当前已登录的用户信息
+            plusUser: [[${plusUser}]],
+            loading: false,
+            resLoading: false,
+            visibility: {
+                userManagement: true,
+                dictManagement: true,
+                ruleManagement: true,
+                factManagement: true
+            },
+            selectionPatternList: [{guid: "xxx"}],
+            weight: [],
+            props: {multiple: true},
+            patternOptions: [
+                {
+                    value: 1,
+                    label: '存在易燃物',
+                    children: [
+                        {
+                            value: 2,
+                            label: '报纸'
+                        },
+                        {
+                            value: 3,
+                            label: '塑料袋'
+                        }
+                    ]
+                },
+                {
+                    value: 4,
+                    label: '环境',
+                    children: [
+                        {
+                            value: 5,
+                            label: '气温高'
+                        },
+                        {
+                            value: 6,
+                            label: '干燥'
+                        }
+                    ]
+                }
+            ],
+            upload: {
+                patternList: []
+            }
+        },
+        methods: {}
+    })
+
+    function addNewSelectionTask() {
+        app.selectionPatternList.push({guid: generateUUID()})
+    }
+
+    function deleteSelectionCondition(index) {
+        app.selectionPatternList.splice(index, 1);
+    }
+
+    function handlePatternSelect(d) {
+        let tmpPattern = {
+            id: d[0][0],
+            weight: 0,
+            factList: []
+        };
+        for (let i = 0; i < d.length; i++) {
+            let tmpFact = {
+                id: d[i][1],
+            }
+            tmpPattern.factList.push(tmpFact);
+        }
+
+
+        app.upload.patternList.push(tmpPattern);
+    }
+
+    function doInference() {
+        app.resLoading = true;
+        // 首先把weight的值赋给patternList
+        let size = app.upload.patternList.length;
+        for (let i = 0; i < size; i++) {
+            app.upload.patternList[i].weight = app.weight[i];
+        }
+        let patentList = app.upload.patternList;
+        ajaxPostJSON("/inference/doInference", patentList, function (d) {
+            app.resLoading = false;
+            app.$message({
+                type: 'success',
+                message: d.message
+            });
+            console.log(d.data)
+        })
+    }
+
+    window.onload = function () {
+        // 调整高度
+        adjustHeight();
+        // 根据用户角色判定侧边栏
+        showAsideByRole(app.plusUser);
+    }
+</script>
+</body>
+</html>

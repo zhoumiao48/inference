@@ -77,7 +77,7 @@ public class RuleService implements RuleServiceInterface {
             // 给factList中的fact添加上id（后一步需要根据fact_id来判断数据库中是否存在pattern）
             tmpPattern.setFactList(factService.checkFactList(factList));
             // 给frontPatterns中的每一个SubPattern添加上id
-            tmpPattern.setId(patternService.checkPattern(factList));
+            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getIsMulti()));
         }
 
         // 检查数据库中是否已经存在此规则，如果存在直接返回false
@@ -90,7 +90,7 @@ public class RuleService implements RuleServiceInterface {
                 backPatterns) {
             List<Fact> factList = tmpPattern.getFactList();
             tmpPattern.setFactList(factService.checkFactList(factList));
-            tmpPattern.setId(patternService.checkPattern(factList));
+            tmpPattern.setId(patternService.checkPattern(factList,tmpPattern.getIsMulti()));
         }
 
         // 把原有iText中的占位数字字符替换成 pattern_id

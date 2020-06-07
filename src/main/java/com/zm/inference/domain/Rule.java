@@ -28,6 +28,11 @@ public class Rule extends BaseClass {
     protected String rText;
 
     /**
+     * 规则说明（规则名称）
+     */
+    protected String content;
+
+    /**
      * 规则强度（用于冲突消解时候后件模式的weight相同时候比较，选定出强度高的那条规则进行激活）
      */
     protected Double degree;

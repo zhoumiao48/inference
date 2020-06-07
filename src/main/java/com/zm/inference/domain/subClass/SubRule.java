@@ -12,7 +12,6 @@ import java.util.List;
  **/
 @Data
 public class SubRule extends Rule {
-
     /**
      * 前件的模式
      */

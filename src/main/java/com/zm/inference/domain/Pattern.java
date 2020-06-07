@@ -1,6 +1,5 @@
 package com.zm.inference.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
@@ -15,8 +14,8 @@ public class Pattern extends BaseClass {
     protected Integer id;
 
     /**
-     * 0：该pattern对应单个fact
-     * 1：该pattern对应多个fact
+     * 0：只要满足这个模式的一个fact即触发此模式，
+     * 1：需要满足这个模式的所有fact才能触发此模式
      */
     protected Byte isMulti;
 }

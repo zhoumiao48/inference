@@ -1,0 +1,11 @@
+.el-aside a{
+    color: #ffffff;
+}
+
+.el-aside a:focus, a:hover{
+    color: #45cde5;
+}
+
+.el-aside a:focus, a:visited{
+    color: #ffffff;
+}

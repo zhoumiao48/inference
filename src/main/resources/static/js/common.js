@@ -191,5 +191,34 @@ function goUserCenter() {
     app.loading = true;
     setTimeout(function () {
         window.location.href = '/view/goUserCenter';
-    }, 500);
+    }, 150);
+}
+
+// 跳转到事实推理页面
+function goInference() {
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goInference';
+    }, 150);
+}
+
+// 跳转到规则录入页面
+function goAddRule() {
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goAddRule';
+    }, 150);
+}
+/**
+ * generateUUID 生成UUID
+ * @returns {string} 返回字符串
+ */
+function generateUUID(){
+    let d = new Date().getTime();
+    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+    });
+    return uuid;
 }

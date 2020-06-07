@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
 
-    /*@Override
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("----------登录状态拦截----------");
 
@@ -33,7 +33,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             return false;
         }
         return true;
-    }*/
+    }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {

@@ -190,7 +190,7 @@
         ajaxPost("/user/login", data, function (d) {
             if (d.code === 'success') {
                 app.$message({
-                    message: d.message + ',欢迎回来：' + d.data.user.uname,
+                    message: d.message + ',欢迎回来：' + d.data.user.uName,
                     type: 'success'
                 });
                 setTimeout(function () {

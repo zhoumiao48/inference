@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{~/plugin/element-ui-recently/index.css}">
     <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
+    <link rel="stylesheet" th:href="@{~/css/sideBar.css}">
+
 
     <!--当前页样式-->
     <style>
@@ -53,12 +55,16 @@
                 </el-submenu>
                 <el-submenu index="3" v-show="visibility.ruleManagement">
                     <template slot="title"><i class="el-icon-collection"></i>规则管理</template>
-                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>新增规则</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goAddRule">新增规则</a>
+                    </el-menu-item>
                     <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
                 </el-submenu>
                 <el-submenu index="4" v-show="visibility.factManagement">
                     <template slot="title"><i class="el-icon-document"></i>事实管理</template>
-                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>录入事实</el-menu-item>
+                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goInference">事实推理</a>
+                    </el-menu-item>
                     <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
                 </el-submenu>
             </el-menu>
@@ -76,7 +82,7 @@
                         <el-dropdown-item><a @click="openLogout">登出系统</a></el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <span>你好：{{plusUser.user.uname}}</span>
+                <span>你好：{{plusUser.user.uName}}</span>
             </el-header>
 
             <el-main>
@@ -112,42 +118,6 @@
         },
         methods: {}
     })
-
-    function logout() {
-        console.log("e")
-        ajaxGet("/user/logout", null, function (d) {
-            if (d.code == 'success') {
-                app.$message({
-                    message: d.message,
-                    type: 'success'
-                });
-                app.loading = true;
-                setTimeout(function () {
-                    window.location.href = "/view/goIndex";
-                }, 500);
-            }
-        })
-    }
-
-    function openLogout() {
-        app.$confirm('确认登出系统?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(
-            function () {
-                logout();
-            }).catch(() => {
-            app.$message({
-                type: 'info',
-                message: '已取消登出'
-            });
-        });
-    }
-
-    function openUserCenter() {
-
-    }
 
     window.onload = function () {
         // 调整高度

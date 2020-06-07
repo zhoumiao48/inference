@@ -1,131 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zm.inference.mapper.RuleMapper">
-  <resultMap id="BaseResultMap" type="com.zm.inference.domain.Rule">
-    <!--@mbg.generated-->
-    <!--@Table `rule`-->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="i_text" jdbcType="VARCHAR" property="iText" />
-    <result column="r_text" jdbcType="VARCHAR" property="rText" />
-    <result column="degree" jdbcType="FLOAT" property="degree" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
-    <result column="created_uid" jdbcType="INTEGER" property="createdUid" />
-    <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, i_text, r_text, degree, created_time, modified_time, created_uid, modified_uid
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from `rule`
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from `rule`
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Rule" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into `rule` (i_text, r_text, degree,
-      created_time, modified_time, created_uid, 
-      modified_uid)
-    values (#{iText,jdbcType=VARCHAR}, #{rText,jdbcType=VARCHAR}, #{degree,jdbcType=FLOAT},
-      #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createdUid,jdbcType=INTEGER}, 
-      #{modifiedUid,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Rule" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into `rule`
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="iText != null">
-        i_text,
-      </if>
-      <if test="rText != null">
-        r_text,
-      </if>
-      <if test="degree != null">
-        degree,
-      </if>
-      <if test="createdTime != null">
-        created_time,
-      </if>
-      <if test="modifiedTime != null">
-        modified_time,
-      </if>
-      <if test="createdUid != null">
-        created_uid,
-      </if>
-      <if test="modifiedUid != null">
-        modified_uid,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="iText != null">
-        #{iText,jdbcType=VARCHAR},
-      </if>
-      <if test="rText != null">
-        #{rText,jdbcType=VARCHAR},
-      </if>
-      <if test="degree != null">
-        #{degree,jdbcType=FLOAT},
-      </if>
-      <if test="createdTime != null">
-        #{createdTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifiedTime != null">
-        #{modifiedTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createdUid != null">
-        #{createdUid,jdbcType=INTEGER},
-      </if>
-      <if test="modifiedUid != null">
-        #{modifiedUid,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zm.inference.domain.Rule">
-    <!--@mbg.generated-->
-    update `rule`
-    <set>
-      <if test="iText != null">
-        i_text = #{iText,jdbcType=VARCHAR},
-      </if>
-      <if test="rText != null">
-        r_text = #{rText,jdbcType=VARCHAR},
-      </if>
-      <if test="degree != null">
-        degree = #{degree,jdbcType=FLOAT},
-      </if>
-      <if test="createdTime != null">
-        created_time = #{createdTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifiedTime != null">
-        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createdUid != null">
-        created_uid = #{createdUid,jdbcType=INTEGER},
-      </if>
-      <if test="modifiedUid != null">
-        modified_uid = #{modifiedUid,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zm.inference.domain.Rule">
-    <!--@mbg.generated-->
-    update `rule`
-    set i_text = #{iText,jdbcType=VARCHAR},
-      r_text = #{rText,jdbcType=VARCHAR},
-      degree = #{degree,jdbcType=FLOAT},
-      created_time = #{createdTime,jdbcType=TIMESTAMP},
-      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
-      created_uid = #{createdUid,jdbcType=INTEGER},
-      modified_uid = #{modifiedUid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <resultMap id="BaseResultMap" type="com.zm.inference.domain.Rule">
+        <!--@mbg.generated-->
+        <!--@Table `rule`-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="i_text" jdbcType="VARCHAR" property="iText"/>
+        <result column="r_text" jdbcType="VARCHAR" property="rText"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="degree" jdbcType="FLOAT" property="degree"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
+        <result column="created_uid" jdbcType="INTEGER" property="createdUid"/>
+        <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, i_text, r_text, content, degree, created_time, modified_time, created_uid, modified_uid
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from `rule`
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete
+        from `rule`
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Rule"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into `rule` (i_text, r_text, content, degree,
+                            created_time, modified_time, created_uid,
+                            modified_uid)
+        values (#{iText,jdbcType=VARCHAR}, #{rText,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+                #{degree,jdbcType=FLOAT},
+                #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createdUid,jdbcType=INTEGER},
+                #{modifiedUid,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.zm.inference.domain.Rule"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into `rule`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="iText != null">
+                i_text,
+            </if>
+            <if test="rText != null">
+                r_text,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="degree != null">
+                degree,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="modifiedTime != null">
+                modified_time,
+            </if>
+            <if test="createdUid != null">
+                created_uid,
+            </if>
+            <if test="modifiedUid != null">
+                modified_uid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="iText != null">
+                #{iText,jdbcType=VARCHAR},
+            </if>
+            <if test="rText != null">
+                #{rText,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR}
+            </if>
+            <if test="degree != null">
+                #{degree,jdbcType=FLOAT},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdUid != null">
+                #{createdUid,jdbcType=INTEGER},
+            </if>
+            <if test="modifiedUid != null">
+                #{modifiedUid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zm.inference.domain.Rule">
+        <!--@mbg.generated-->
+        update `rule`
+        <set>
+            <if test="iText != null">
+                i_text = #{iText,jdbcType=VARCHAR},
+            </if>
+            <if test="rText != null">
+                r_text = #{rText,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content =#{content,jdbcType=VARCHAR},
+            </if>
+            <if test="degree != null">
+                degree = #{degree,jdbcType=FLOAT},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifiedTime != null">
+                modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdUid != null">
+                created_uid = #{createdUid,jdbcType=INTEGER},
+            </if>
+            <if test="modifiedUid != null">
+                modified_uid = #{modifiedUid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zm.inference.domain.Rule">
+        <!--@mbg.generated-->
+        update `rule`
+        set i_text        = #{iText,jdbcType=VARCHAR},
+            r_text        = #{rText,jdbcType=VARCHAR},
+            content       = #{content,jdbcType=VARCHAR},
+            degree        = #{degree,jdbcType=FLOAT},
+            created_time  = #{createdTime,jdbcType=TIMESTAMP},
+            modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+            created_uid   = #{createdUid,jdbcType=INTEGER},
+            modified_uid  = #{modifiedUid,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>
