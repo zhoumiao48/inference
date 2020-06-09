@@ -164,4 +164,38 @@
                      right join map_rule_pattern t2
                 on t1.id = t2.p_id and t2.r_id = #{ruleId,jdbcType=INTEGER}
     </select>
+
+    <select id="selectFrontByRuleId" resultMap="SubPattern">
+        select t1.id,
+               is_multi,
+               t1.created_time,
+               t1.modified_time,
+               t1.created_uid,
+               t1.modified_uid,
+               weight
+        from pattern t1
+                     right join (select p_id,
+                                        r_id,
+                                        weight
+                                 from map_rule_pattern
+                                 where is_front = 0) t2
+                on t1.id = t2.p_id and t2.r_id = #{ruleId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectBackByRuleId" resultMap="SubPattern">
+        select t1.id,
+               is_multi,
+               t1.created_time,
+               t1.modified_time,
+               t1.created_uid,
+               t1.modified_uid,
+               weight
+        from pattern t1
+                     right join (select p_id,
+                                        r_id,
+                                        weight
+                                 from map_rule_pattern
+                                 where is_front = 1) t2
+                on t1.id = t2.p_id and t2.r_id = #{ruleId,jdbcType=INTEGER}
+    </select>
 </mapper>

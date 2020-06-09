@@ -15,7 +15,7 @@
         <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid"/>
     </resultMap>
 
-    <resultMap id="rulePatternMap" type="com.zm.inference.domain.subClass.SubRule">
+    <resultMap id="SubRule" type="com.zm.inference.domain.subClass.SubRule">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="i_text" jdbcType="VARCHAR" property="iText"/>
         <result column="r_text" jdbcType="VARCHAR" property="rText"/>
@@ -26,10 +26,15 @@
         <result column="created_uid" jdbcType="INTEGER" property="createdUid"/>
         <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid"/>
         <!--规则前件的模式-->
-        <collection column="id" property="frontPatternList" ofType="com.zm.inference.domain.subClass.SubPattern"
-                    select="com.zm.inference.mapper.PatternMapper.selectByPrimaryKey">
+        <collection column="{ruleId=id}" property="frontPatternList"
+                    ofType="com.zm.inference.domain.subClass.SubPattern"
+                    select="com.zm.inference.mapper.PatternMapper.selectFrontByRuleId">
         </collection>
         <!--规则后件的模式-->
+        <collection column="{ruleId=id}" property="backPatternList"
+                    ofType="com.zm.inference.domain.subClass.SubPattern"
+                    select="com.zm.inference.mapper.PatternMapper.selectBackByRuleId">
+        </collection>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -161,4 +166,10 @@
             modified_uid  = #{modifiedUid,jdbcType=INTEGER}
         where id = #{id,jdbcType=INTEGER}
     </update>
+
+    <select id="selectAllRule" resultMap="SubRule">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zm.inference.mapper.MapRulePatternMapper">
+
     <resultMap id="BaseResultMap" type="com.zm.inference.domain.mapClass.MapRulePattern">
         <!--@mbg.generated-->
         <!--@Table map_rule_pattern-->
@@ -187,5 +188,11 @@
                  open="(" separator="," close=")">
             #{item,jdbcType=INTEGER}
         </foreach>
+    </select>
+
+    <select id="selectRIdAndPId" resultType="com.zm.inference.common.util.domain.RidAndPid">
+        select r_id, p_id
+        from map_rule_pattern
+        where is_front = 0
     </select>
 </mapper>

@@ -3,12 +3,14 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.domain.subClass.SubPattern;
+import com.zm.inference.service.InferenceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,15 +25,16 @@ import java.util.List;
 public class InferenceController extends BaseController {
 
 
+    @Resource
+    private InferenceService inferenceService;
+
     @PostMapping("/doInference")
     public Object doInference(@RequestBody List<SubPattern> subPatternList) {
-        // 前端传入的subPatternList有的id和weight
+        List<SubPattern> ansPatterns = inferenceService.doInference(subPatternList);
 
-        // 首先获取所有封装了模式的规则
-
-        // 根据pattern_id去找有没有匹配了的规则 -> 冲突消解 -> 规则激活
-
-        // 返回前端一个事实集合
-        return retMsg.Set(MsgType.SUCCESS, subPatternList, "推理成功");
+        if (ansPatterns.size() == 0) {
+            return retMsg.Set(MsgType.ERROR, null, "推理失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, ansPatterns, "推理成功");
     }
 }

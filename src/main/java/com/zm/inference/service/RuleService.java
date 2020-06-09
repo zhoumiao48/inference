@@ -1,6 +1,8 @@
 package com.zm.inference.service;
 
 import com.zm.inference.common.util.StringTool;
+import com.zm.inference.common.util.domain.IdAndName;
+import com.zm.inference.common.util.domain.RidAndPid;
 import com.zm.inference.domain.Fact;
 import com.zm.inference.domain.mapClass.MapRulePattern;
 import com.zm.inference.domain.subClass.SubPattern;
@@ -13,9 +15,8 @@ import javax.annotation.Resource;
 import com.zm.inference.mapper.RuleMapper;
 import com.zm.inference.domain.Rule;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Service
 public class RuleService {
@@ -30,7 +31,7 @@ public class RuleService {
     private PatternService patternService;
 
     @Resource
-    private MapRulePatternMapper mapRulePatternMapper;
+    private MapRulePatternMapper mrpMapper;
 
     public int deleteByPrimaryKey(Integer id) {
         return ruleMapper.deleteByPrimaryKey(id);
@@ -145,7 +146,7 @@ public class RuleService {
             mrp2.setCreatedTime(dateNow);
             mrpList.add(mrp2);
         }
-        mapRulePatternMapper.insertList(mrpList);
+        mrpMapper.insertList(mrpList);
         return true;
     }
 
@@ -158,7 +159,7 @@ public class RuleService {
         for (SubPattern frontPattern : frontPatterns) {
             patternIds.add(frontPattern.getId());
         }
-        List<Integer> ruleIdList = mapRulePatternMapper.selectDistinctRIdByPIdIn(patternIds);
+        List<Integer> ruleIdList = mrpMapper.selectDistinctRIdByPIdIn(patternIds);
         if (ruleIdList.size() == 1) {
             return ruleIdList.get(0);
         }
@@ -169,6 +170,32 @@ public class RuleService {
      * 获取所有的规则知识（封装相应的模式）
      */
     public List<SubRule> getAllRule() {
-        return null;
+        return ruleMapper.selectAllRule();
+    }
+
+    /**
+     * 获取一个map，键是ruleId，值是对应的patternId的集合
+     */
+    public Map<Integer, ArrayList<Integer>> getRulePatternMap() {
+        List<RidAndPid> rulePatterns = mrpMapper.selectRIdAndPId();
+
+        HashMap<Integer,ArrayList<Integer>> mapRulePattern = new HashMap<>();
+
+        for (RidAndPid item: rulePatterns){
+            // 首先看map中有没有这个规则
+            Integer ruleId = item.getRId();
+            Integer patternId = item.getPId();
+            if(mapRulePattern.containsKey(ruleId)){
+                // 如果有这个ruleId了
+                mapRulePattern.get(ruleId).add(patternId);
+            }else{
+                // 如果没有的话
+                ArrayList<Integer> tmpArr = new ArrayList<>();
+                tmpArr.add(patternId);
+                mapRulePattern.put(ruleId,tmpArr);
+            }
+        }
+
+        return mapRulePattern;
     }
 }

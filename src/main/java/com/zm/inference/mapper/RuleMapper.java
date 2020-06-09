@@ -1,6 +1,9 @@
 package com.zm.inference.mapper;
 
 import com.zm.inference.domain.Rule;
+import com.zm.inference.domain.subClass.SubRule;
+
+import java.util.List;
 
 public interface RuleMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +19,8 @@ public interface RuleMapper {
     int updateByPrimaryKey(Rule record);
 
 
+    /**
+     * 查询所有的规则知识（封装相应的模式）
+     */
+    List<SubRule> selectAllRule();
 }

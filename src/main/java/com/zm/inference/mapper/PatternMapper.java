@@ -26,7 +26,17 @@ public interface PatternMapper {
     List<SubPattern> selectAll();
 
     /**
-     * 根据ruleId查找返回相关的模式集合
+     * 根据ruleId查找返回相关的模式集合（前件+后件）
      */
     List<SubPattern> selectByRuleId(Integer ruleId);
+
+    /**
+     * 根据ruleId查找返回相关前件集合
+     */
+    List<SubPattern> selectFrontByRuleId(Integer ruleId);
+
+    /**
+     * 根据ruleId查找返回相关的后件集合
+     */
+    List<SubPattern> selectBackByRuleId(Integer ruleId);
 }

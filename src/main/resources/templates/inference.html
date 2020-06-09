@@ -11,7 +11,8 @@
     <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
     <link rel="stylesheet" th:href="@{~/css/sideBar.css}">
-
+    <!--通用样式-->
+    <link rel="stylesheet" th:href="@{~/css/common.css}">
     <!--当前页样式-->
     <style>
         span {
@@ -68,6 +69,11 @@
         .pattern-input .el-input__inner {
             width: 400px;
         }
+
+        .item {
+            margin-top: 10px;
+            margin-right: 40px;
+        }
     </style>
 </head>
 <body onload="document.body.style.opacity='1'">
@@ -93,12 +99,16 @@
                 </el-submenu>
                 <el-submenu index="3" v-show="visibility.ruleManagement">
                     <template slot="title"><i class="el-icon-collection"></i>规则管理</template>
-                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>新增规则</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goAddRule">新增规则</a>
+                    </el-menu-item>
                     <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
                 </el-submenu>
                 <el-submenu index="4" v-show="visibility.factManagement">
                     <template slot="title"><i class="el-icon-document"></i>事实管理</template>
-                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>事实推理</el-menu-item>
+                    <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goInference">事实推理</a>
+                    </el-menu-item>
                     <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
                 </el-submenu>
             </el-menu>
@@ -124,7 +134,10 @@
                     <el-col :span="16">
                         <div class="grid-content bg-purple">
                             事实录入
-
+                            <el-button
+                                    @click="refresh" type="warning" size="medium"
+                                    circle icon="el-icon-refresh">
+                            </el-button>
                             <div class="block"
                                  style="margin-top: 10px"
                                  v-for="(item,index) in selectionPatternList" :key="item.guid">
@@ -167,7 +180,21 @@
                     </el-col>
                     <el-col :span="8">
                         <div class="grid-content bg-purple">
-                            推理结果
+
+                            <el-card class="box-card" style="margin-top:20px;min-height: 480px">
+                                <div slot="header" class="clearfix">
+                                    <span>推理结果</span>
+                                </div>
+                                <div>
+                                    结论可信度：
+                                    <el-tag>{{this.resultPattern.weight}}</el-tag>
+                                </div>
+                                <div v-for="(item,index) in resultPattern.factList"
+                                     style="margin-top: 10px"
+                                     :key="item.id">
+                                    结论 {{index+1}} ：<u>{{item.fAttribute}} {{item.fValue}}</u>
+                                </div>
+                            </el-card>
                         </div>
                     </el-col>
                 </el-row>
@@ -206,15 +233,35 @@
             patternOptions: [],
             upload: {
                 patternList: []
+            },
+            resultPattern: {
+                id: 0,
+                weight: 0,
+                factList: [],
             }
         },
         methods: {}
     })
 
+    // 添加新的候选栏
     function addNewSelectionTask() {
         app.selectionPatternList.push({guid: generateUUID()})
     }
 
+    // 清空模式候选框
+    function refresh() {
+        app.selectionPatternList = [];
+        app.upload.patternList = [];
+        app.weight = [];
+        addNewSelectionTask();
+    }
+
+    // 数据完整性检测
+    function completeCheck() {
+        return app.weight.length == app.upload.patternList.length;
+    }
+
+    // 每次删除时候的操作
     function deleteSelectionCondition(index) {
         // 这个selectionPatternList是没有经过处理的
         app.selectionPatternList.splice(index, 1);
@@ -223,21 +270,22 @@
         // weight数组也要相应的删除
         app.weight.splice(index, 1);
 
+        console.log("移除")
+        console.log(app.upload.patternList)
     }
 
     // 每次选中时候应该做的操作
     function handlePatternSelect(d) {
-        console.log("选中")
         if (d.length === 0) {
             return;
         }
+
         let tmpPattern = {
             id: d[0][0],
             weight: 0,
             factList: [],
             isMulti: 0
         };
-
         // 从patternList中获取对应的isMulti值
         for (let i = 0; i < app.patternOptions.length; i++) {
             if (tmpPattern.id == app.patternOptions[i].value) {
@@ -253,8 +301,9 @@
             tmpPattern.factList.push(tmpFact);
         }
         app.upload.patternList.push(tmpPattern);
-        /*console.log("----------")
-        console.log(app.upload.patternList)*/
+
+        console.log("选中")
+        console.log(app.upload.patternList)
     }
 
     // 设置初始的模式集合
@@ -286,23 +335,43 @@
 
     // 结果推理
     function doInference() {
+        if (!completeCheck()) {
+            app.$message({
+                type: 'warning',
+                message: '请将信息补充完整'
+            });
+            return;
+        }
         app.resLoading = true;
         // 首先把weight的值赋给patternList
         let size = app.upload.patternList.length;
+        let uploadPatterns = app.upload.patternList;
         for (let i = 0; i < size; i++) {
-            app.upload.patternList[i].weight = app.weight[i];
+            uploadPatterns[i].weight = app.weight[i];
         }
-        let patternList = app.upload.patternList;
 
-        console.log(patternList)
+        console.log("待上传的动态库模式")
+        console.log(uploadPatterns)
 
-        ajaxPostJSON("/inference/doInference", patternList, function (d) {
+        ajaxPostJSON("/inference/doInference", uploadPatterns, function (d) {
             app.resLoading = false;
-            app.$message({
-                type: 'success',
-                message: d.message
-            });
+            if (d.code == "error") {
+                app.$message({
+                    type: 'error',
+                    message: d.message
+                });
+            } else {
+                app.$message({
+                    type: 'success',
+                    message: d.message
+                });
+            }
+            console.log("d.data的值")
             console.log(d.data)
+
+            app.resultPattern = d.data[0];
+            // 四舍五入保留三位小数
+            app.resultPattern.weight = d.data[0].weight.toFixed(3)
         })
     }
 
