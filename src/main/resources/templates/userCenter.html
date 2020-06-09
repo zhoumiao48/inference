@@ -17,6 +17,10 @@
             font-size: 14px;
         }
 
+        .el-row {
+            margin-top: 10px;
+        }
+
         .el-header {
             background-color: #9fabba;
             color: #282525;
@@ -25,6 +29,9 @@
 
         .el-footer {
             background-color: #9fabba;
+        }
+        .box{
+            padding: 10px 0px 10px 0px;
         }
     </style>
 </head>
@@ -82,7 +89,53 @@
             </el-header>
 
             <el-main>
-
+                <el-row :gutter="20">
+                    <el-col :span="6">
+                        <div class="box" v-if="!isEdit">
+                            用户名：
+                            <el-input
+                                    v-model="plusUser.user.uName"
+                                    :disabled="true">
+                            </el-input>
+                        </div>
+                        <div class="box" v-else>
+                            用户名：
+                            <el-input
+                                    placeholder="请输入用户名"
+                                    v-model="tmpUser.username"
+                                    :disabled="!isEdit">
+                            </el-input>
+                        </div>
+                       <div class="box" v-show="isEdit">
+                           修改密码：
+                           <el-input
+                                   placeholder="请输入密码"
+                                   v-model="tmpUser.password"
+                                   :disabled="!isEdit">
+                           </el-input>
+                       </div>
+                        <div class="box" v-show="isEdit">
+                            确认密码：
+                            <el-input
+                                    placeholder="请再次输入密码"
+                                    v-model="tmpUser.rePassword"
+                                    :disabled="!isEdit">
+                            </el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="6" v-show="!isEdit">
+                        <el-button type="primary" round
+                                   @click="changeEditMode">修改个人信息
+                        </el-button>
+                    </el-col>
+                    <el-col :span="6" v-show="isEdit">
+                        <el-button type="success" round
+                                   @click="changeEditMode">保存信息修改
+                        </el-button>
+                    </el-col>
+                </el-row>
             </el-main>
             <el-footer>
 
@@ -105,15 +158,25 @@
             // plusUser存储的是当前已登录的用户信息
             plusUser: [[${plusUser}]],
             loading: false,
-            visibility:{
-                userManagement:true,
-                dictManagement:true,
-                ruleManagement:true,
-                factManagement:true
+            visibility: {
+                userManagement: true,
+                dictManagement: true,
+                ruleManagement: true,
+                factManagement: true
+            },
+            isEdit: false,
+            tmpUser:{
+                username:'',
+                password:'',
+                rePassword:'',
             }
         },
         methods: {}
     })
+
+    function changeEditMode() {
+        app.isEdit = !app.isEdit;
+    }
 
     window.onload = function () {
         // 调整高度
