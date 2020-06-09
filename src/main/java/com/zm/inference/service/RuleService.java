@@ -1,4 +1,4 @@
-package com.zm.inference.service.impl;
+package com.zm.inference.service;
 
 import com.zm.inference.common.util.StringTool;
 import com.zm.inference.domain.Fact;
@@ -6,7 +6,6 @@ import com.zm.inference.domain.mapClass.MapRulePattern;
 import com.zm.inference.domain.subClass.SubPattern;
 import com.zm.inference.domain.subClass.SubRule;
 import com.zm.inference.mapper.MapRulePatternMapper;
-import com.zm.inference.service.RuleServiceInterface;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,13 +13,12 @@ import javax.annotation.Resource;
 import com.zm.inference.mapper.RuleMapper;
 import com.zm.inference.domain.Rule;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class RuleService implements RuleServiceInterface {
+public class RuleService {
 
     @Resource
     private RuleMapper ruleMapper;
@@ -63,7 +61,9 @@ public class RuleService implements RuleServiceInterface {
         return ruleMapper.updateByPrimaryKey(record);
     }
 
-    @Override
+    /**
+     * 添加新的规则
+     */
     public Boolean addNewRule(SubRule subRule) {
         // step1：首先看规则中所含的事实fact是否存在于系统中，如果不存在就需要进行插入，然后都需要给fact加上id值
         List<SubPattern> frontPatterns = subRule.getFrontPatternList();
@@ -90,7 +90,7 @@ public class RuleService implements RuleServiceInterface {
                 backPatterns) {
             List<Fact> factList = tmpPattern.getFactList();
             tmpPattern.setFactList(factService.checkFactList(factList));
-            tmpPattern.setId(patternService.checkPattern(factList,tmpPattern.getIsMulti()));
+            tmpPattern.setId(patternService.checkPattern(factList, tmpPattern.getIsMulti()));
         }
 
         // 把原有iText中的占位数字字符替换成 pattern_id
@@ -129,6 +129,8 @@ public class RuleService implements RuleServiceInterface {
             mrp1.setWeight(sp.getWeight());
             // 0代表是前件
             mrp1.setIsFront((byte) 0);
+            mrp1.setCreatedTime(dateNow);
+            mrp1.setModifiedTime(dateNow);
             mrpList.add(mrp1);
         }
         // 插入map_rule_pattern关联——后件
@@ -139,13 +141,17 @@ public class RuleService implements RuleServiceInterface {
             mrp2.setWeight(sp.getWeight());
             // 其代表是后件
             mrp2.setIsFront((byte) 1);
+            mrp2.setModifiedTime(dateNow);
+            mrp2.setCreatedTime(dateNow);
             mrpList.add(mrp2);
         }
         mapRulePatternMapper.insertList(mrpList);
         return true;
     }
 
-    @Override
+    /**
+     * 检查是否存在规则
+     */
     public Integer checkRule(List<SubPattern> frontPatterns) {
         int size = frontPatterns.size();
         List<Integer> patternIds = new ArrayList<>(size);
@@ -157,5 +163,12 @@ public class RuleService implements RuleServiceInterface {
             return ruleIdList.get(0);
         }
         return -1;
+    }
+
+    /**
+     * 获取所有的规则知识（封装相应的模式）
+     */
+    public List<SubRule> getAllRule() {
+        return null;
     }
 }

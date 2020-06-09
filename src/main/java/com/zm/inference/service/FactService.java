@@ -1,5 +1,6 @@
-package com.zm.inference.service.impl;
+package com.zm.inference.service;
 
+import com.zm.inference.mapper.MapPatternFactMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +16,8 @@ public class FactService {
     @Resource
     private FactMapper factMapper;
 
+    @Resource
+    private MapPatternFactMapper mpfMapper;
 
     public int deleteByPrimaryKey(Integer id) {
         return factMapper.deleteByPrimaryKey(id);
@@ -56,7 +59,7 @@ public class FactService {
             if (factIds.size() == 1) {
                 // 如果原系统中存在该条事实知识 -> 直接修改fact的值
                 tmpFact.setId(factIds.get(0));
-            }else{
+            } else {
                 // 原系统中不存在该条事实知识 -> 需要进行事实知识的插入，插入之后同样需要把原有的fact对象加上id值
                 // 这里的insertSelective默认就会把tmpFact加上id
                 insertSelective(tmpFact);
@@ -64,5 +67,13 @@ public class FactService {
         }
         // 返回添加了id之后的事实列表
         return origFacts;
+    }
+
+    public List<Fact> getFactsByPid(Integer patternId) {
+
+        // 首先根据patternId找到先关的所有fId
+        List<Integer> fIdList = mpfMapper.selectFIdByPId(patternId);
+        // 其次根据fId找到所有的fact
+        return factMapper.selectByIdIn(fIdList);
     }
 }

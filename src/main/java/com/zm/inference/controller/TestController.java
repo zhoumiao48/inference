@@ -5,7 +5,7 @@ import com.zm.inference.common.util.MsgType;
 import com.zm.inference.domain.Pattern;
 import com.zm.inference.domain.Rule;
 import com.zm.inference.domain.subClass.SubRule;
-import com.zm.inference.service.impl.RuleService;
+import com.zm.inference.service.RuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

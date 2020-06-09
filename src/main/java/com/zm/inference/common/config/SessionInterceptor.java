@@ -20,7 +20,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("----------登录状态拦截----------");
+      /*  log.info("----------登录状态拦截----------");
 
         HttpSession session = request.getSession();
         log.info("sessionID: "+session.getId());
@@ -31,7 +31,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             log.info("未登录");
             response.getWriter().write("请先登录");
             return false;
-        }
+        }*/
         return true;
     }
 

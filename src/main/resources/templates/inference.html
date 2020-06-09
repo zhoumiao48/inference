@@ -203,36 +203,7 @@
             selectionPatternList: [{guid: "xxx"}],
             weight: [],
             props: {multiple: true},
-            patternOptions: [
-                {
-                    value: 1,
-                    label: '存在易燃物',
-                    children: [
-                        {
-                            value: 2,
-                            label: '报纸'
-                        },
-                        {
-                            value: 3,
-                            label: '塑料袋'
-                        }
-                    ]
-                },
-                {
-                    value: 4,
-                    label: '环境',
-                    children: [
-                        {
-                            value: 5,
-                            label: '气温高'
-                        },
-                        {
-                            value: 6,
-                            label: '干燥'
-                        }
-                    ]
-                }
-            ],
+            patternOptions: [],
             upload: {
                 patternList: []
             }
@@ -245,26 +216,75 @@
     }
 
     function deleteSelectionCondition(index) {
+        // 这个selectionPatternList是没有经过处理的
         app.selectionPatternList.splice(index, 1);
+        // 这个是和后端数据结构对应的上的
+        app.upload.patternList.splice(index, 1);
+        // weight数组也要相应的删除
+        app.weight.splice(index, 1);
+
     }
 
+    // 每次选中时候应该做的操作
     function handlePatternSelect(d) {
+        console.log("选中")
+        if (d.length === 0) {
+            return;
+        }
         let tmpPattern = {
             id: d[0][0],
             weight: 0,
-            factList: []
+            factList: [],
+            isMulti: 0
         };
+
+        // 从patternList中获取对应的isMulti值
+        for (let i = 0; i < app.patternOptions.length; i++) {
+            if (tmpPattern.id == app.patternOptions[i].value) {
+                tmpPattern.isMulti = app.patternOptions[i].isMulti;
+                break;
+            }
+        }
+
         for (let i = 0; i < d.length; i++) {
             let tmpFact = {
                 id: d[i][1],
             }
             tmpPattern.factList.push(tmpFact);
         }
-
-
         app.upload.patternList.push(tmpPattern);
+        /*console.log("----------")
+        console.log(app.upload.patternList)*/
     }
 
+    // 设置初始的模式集合
+    function getPatternList() {
+        ajaxPostJSON("/inference/pattern/getPatterns", null, function (d) {
+            console.log(d.data)
+            let patternList = d.data;
+            let len = patternList.length;
+            for (let i = 0; i < len; i++) {
+                let tmpPattern = patternList[i];
+                let tmpFacts = tmpPattern.factList;
+                let item = {
+                    value: tmpPattern.id,
+                    label: tmpFacts[0].fAttribute,
+                    isMulti: tmpPattern.isMulti,
+                    children: [],
+                };
+                for (let j = 0; j < tmpFacts.length; j++) {
+                    item.children.push({
+                        label: tmpFacts[j].fValue,
+                        value: tmpFacts[j].id,
+                    });
+                }
+
+                app.patternOptions.push(item);
+            }
+        })
+    }
+
+    // 结果推理
     function doInference() {
         app.resLoading = true;
         // 首先把weight的值赋给patternList
@@ -272,8 +292,11 @@
         for (let i = 0; i < size; i++) {
             app.upload.patternList[i].weight = app.weight[i];
         }
-        let patentList = app.upload.patternList;
-        ajaxPostJSON("/inference/doInference", patentList, function (d) {
+        let patternList = app.upload.patternList;
+
+        console.log(patternList)
+
+        ajaxPostJSON("/inference/doInference", patternList, function (d) {
             app.resLoading = false;
             app.$message({
                 type: 'success',
@@ -288,6 +311,8 @@
         adjustHeight();
         // 根据用户角色判定侧边栏
         showAsideByRole(app.plusUser);
+        // 初始化模式数据
+        getPatternList();
     }
 </script>
 </body>

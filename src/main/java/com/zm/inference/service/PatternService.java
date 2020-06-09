@@ -1,7 +1,8 @@
-package com.zm.inference.service.impl;
+package com.zm.inference.service;
 
 import com.zm.inference.domain.Fact;
 import com.zm.inference.domain.mapClass.MapPatternFact;
+import com.zm.inference.domain.subClass.SubPattern;
 import com.zm.inference.mapper.MapPatternFactMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,10 @@ public class PatternService {
     private PatternMapper patternMapper;
 
     @Resource
-    private MapPatternFactMapper mapPatternFactMapper;
+    private MapPatternFactMapper mpfMapper;
+
+    @Resource
+    private FactService factService;
 
     public int deleteByPrimaryKey(Integer id) {
         return patternMapper.deleteByPrimaryKey(id);
@@ -68,7 +72,7 @@ public class PatternService {
             factIdList.add(fact.getId());
         }
 
-        List<Integer> patternIds = mapPatternFactMapper.selectDistinctPIdByFIdIn(factIdList);
+        List<Integer> patternIds = mpfMapper.selectDistinctPIdByFIdIn(factIdList);
         if (patternIds.size() == 0) {
             // 数据库中不存在该模式
             // 插入该新模式
@@ -87,11 +91,31 @@ public class PatternService {
                 patternFact.setFId(factId);
                 patternFactList.add(patternFact);
             }
-            mapPatternFactMapper.insertList(patternFactList);
+            mpfMapper.insertList(patternFactList);
 
             return newPatternId;
         } else {
             return patternIds.get(0);
         }
+    }
+
+    /**
+     * 获取系统中的模式集合（内部封装了相应的事实知识）
+     *
+     * @author zm
+     * @param []
+     * @return java.util.List<com.zm.inference.domain.subClass.SubPattern>
+     * @date 2020/6/9 8:40
+     **/
+    public List<SubPattern> getPatternList() {
+        // 首先去查找us噢哟
+        List<SubPattern> subPatternList = patternMapper.selectAll();
+
+        for (int i = 0; i < subPatternList.size(); i++) {
+            SubPattern sp = subPatternList.get(i);
+            // 设置对应的事实
+            sp.setFactList(factService.getFactsByPid(sp.getId()));
+        }
+        return subPatternList;
     }
 }

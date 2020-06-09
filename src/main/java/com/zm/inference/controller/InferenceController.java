@@ -3,6 +3,7 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.domain.subClass.SubPattern;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
  * @Date 2020/5/20 9:55
  **/
 
+@Slf4j
 @RestController
 @RequestMapping("/inference")
 public class InferenceController extends BaseController {
@@ -24,6 +26,8 @@ public class InferenceController extends BaseController {
     @PostMapping("/doInference")
     public Object doInference(@RequestBody List<SubPattern> subPatternList) {
         // 前端传入的subPatternList有的id和weight
+
+        // 首先获取所有封装了模式的规则
 
         // 根据pattern_id去找有没有匹配了的规则 -> 冲突消解 -> 规则激活
 

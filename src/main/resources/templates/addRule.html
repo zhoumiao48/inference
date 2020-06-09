@@ -87,7 +87,8 @@
                 规则前件
                 <el-button size="small"
                            @click="addFrontPattern"
-                           type="success" plain>新增前件模式</el-button>
+                           type="success" plain>新增前件模式
+                </el-button>
                 <div class="block" style="margin-top: 10px;"
                      v-for="(item,index) in frontPatternList" :key="item.guid">
                     <el-row type="flex" :gutter="20" align="middle">
@@ -96,8 +97,8 @@
                         </el-cpl>
                         <el-col :span="3">
                             <template>
+                                <el-radio v-model="frontPatternList[index].radio" label="0">析取</el-radio>
                                 <el-radio v-model="frontPatternList[index].radio" label="1">合取</el-radio>
-                                <el-radio v-model="frontPatternList[index].radio" label="2">析取</el-radio>
                             </template>
                         </el-col>
                         <el-cpl :span="2">
@@ -117,7 +118,8 @@
                         </el-col>
                         <el-col :span="2">
                             <el-button size="small" type="danger" plain
-                                       @click="deleteFrontPattern(index)">删除</el-button>
+                                       @click="deleteFrontPattern(index)">删除
+                            </el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -132,8 +134,8 @@
                         </el-cpl>
                         <el-col :span="3">
                             <template>
+                                <el-radio v-model="backPattern.radio" label="0">析取</el-radio>
                                 <el-radio v-model="backPattern.radio" label="1">合取</el-radio>
-                                <el-radio v-model="backPattern.radio" label="2">析取</el-radio>
                             </template>
                         </el-col>
                         <el-cpl :span="2">
@@ -155,18 +157,24 @@
                 </div>
 
                 <el-divider></el-divider>
-                中缀表达式（注意用空格隔开每一个字符)
+                中缀表达式 + 规则名
                 <div class="block" style="margin-top: 10px;">
                     <el-row type="flex" :gutter="20" align="middle">
-                        <el-col :span="13">
+                        <el-col :span="7">
                             <el-input v-model="input.infixExpression"
-                                      placeholder="请输入中缀表达式"></el-input>
+                                      placeholder="请输入中缀表达式（注意用空格隔开每一个字符)"
+                                      @clic="addRule"></el-input>
+                        </el-col>
+                        <el-col :span="7">
+                            <el-input v-model="input.ruleContent"
+                                      placeholder="请输入规则名称"></el-input>
+                        </el-col>
+                        <el-col :span="5">
+                            <el-button type="primary" @click="addRule">录入规则</el-button>
                         </el-col>
                     </el-row>
                 </div>
 
-                <el-divider></el-divider>
-                <el-button type="primary">录入规则</el-button>
             </el-main>
 
 
@@ -197,26 +205,119 @@
                 ruleManagement: true,
                 factManagement: true
             },
-            frontPatternList: [{guid: "xxx"}],
-            backPattern:{
-                radio:1,
-                property:"",
-                value:"",
-                weight:0
+            frontPatternList: [{
+                guid: "xxx", weight: 0, radio: '1', property: '', value: '',
+            }],
+            backPattern: {
+                radio: '1',
+                property: "",
+                value: "",
+                weight: 0
             },
             input: {
                 infixExpression: '',
+                ruleContent: '',
             }
         },
         methods: {}
     })
 
+    // 添加前件模式
     function addFrontPattern() {
-        app.frontPatternList.push({guid: generateUUID()})
+        app.frontPatternList.push({
+            guid: generateUUID(), weight: 0, radio: '1', property: '', value: ''
+        })
     }
 
+    // 移除前件模式
     function deleteFrontPattern(index) {
         app.frontPatternList.splice(index, 1);
+    }
+
+    // 完整性检查
+    function completeCheck() {
+        let frontPatternList = app.frontPatternList;
+        let backPattern = app.backPattern;
+        for (let i = 0; i < frontPatternList.length; i++) {
+            let tmpFrontPattern = frontPatternList[i];
+            if(tmpFrontPattern.property == null || tmpFrontPattern.property ==''){
+                return false;
+            }
+            if(tmpFrontPattern.value == null || tmpFrontPattern.value == ''){
+                return false;
+            }
+        }
+
+        if(backPattern.property == null || backPattern.property == ''){
+            return false;
+        }
+
+        if(backPattern.value == null || backPattern.value == ''){
+            return false;
+        }
+        return true;
+    }
+
+    // 新增规则
+    function addRule() {
+        if(!completeCheck()){
+            app.$message({
+                type: 'warning',
+                message: '请将信息补充完整'
+            });
+            return;
+        }
+        app.loading = true;
+        let rule = {
+            content: '',
+            iText: '',
+            degree: 0,
+            frontPatternList: [],
+            backPatternList: [],
+        };
+        rule.content = app.input.ruleContent;
+        rule.iText = app.input.infixExpression;
+        rule.degree = app.backPattern.weight;
+
+        // 处理前件
+        let frontPatternList = app.frontPatternList;
+        for (let i = 0; i < frontPatternList.length; i++) {
+            let tmpFPattern = {factList: []};
+            tmpFPattern.weight = frontPatternList[i].weight;
+            tmpFPattern.isMulti = frontPatternList[i].radio;
+
+            let frontFacts = frontPatternList[i].value.trim().split(/\s+/);
+            for (let j = 0; j < frontFacts.length; j++) {
+                let fact = {};
+                fact.fAttribute = frontPatternList[i].property;
+                fact.fValue = frontFacts[j];
+                tmpFPattern.factList.push(fact);
+            }
+            rule.frontPatternList.push(tmpFPattern);
+        }
+
+        // 处理后件
+        let backPattern = {factList: []};
+        backPattern.weight = app.backPattern.weight;
+        backPattern.isMulti = app.backPattern.radio;
+        let backFacts = app.backPattern.value.trim().split(/\s+/);
+        for (let i = 0; i < backFacts.length; i++) {
+            let fact = {};
+            fact.fAttribute = app.backPattern.property;
+            fact.fValue = backFacts[i];
+            backPattern.factList.push(fact);
+        }
+        rule.backPatternList.push(backPattern);
+
+        console.log(rule);
+
+        ajaxPostJSON("/inference/rule/addRule", rule, function (d) {
+            app.loading = false;
+            app.$message({
+                type: 'success',
+                message: d.message
+            });
+        })
     }
 
     window.onload = function () {

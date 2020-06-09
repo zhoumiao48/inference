@@ -1,13 +1,15 @@
 package com.zm.inference.domain.mapClass;
 
 import java.util.Date;
+
+import com.zm.inference.common.util.domain.BaseClass;
 import lombok.Data;
 
 /**
  * 规则-模式关联表
  */
 @Data
-public class MapRulePattern {
+public class MapRulePattern extends BaseClass {
     /**
      * 主键id
      */
@@ -32,24 +34,4 @@ public class MapRulePattern {
      * 模式的权重
      */
     private Double weight;
-
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifiedTime;
-
-    /**
-     * 创建人id
-     */
-    private Integer createdUid;
-
-    /**
-     * 修改人id
-     */
-    private Integer modifiedUid;
 }

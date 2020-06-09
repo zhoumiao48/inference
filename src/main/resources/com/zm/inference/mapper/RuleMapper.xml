@@ -14,6 +14,24 @@
         <result column="created_uid" jdbcType="INTEGER" property="createdUid"/>
         <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid"/>
     </resultMap>
+
+    <resultMap id="rulePatternMap" type="com.zm.inference.domain.subClass.SubRule">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="i_text" jdbcType="VARCHAR" property="iText"/>
+        <result column="r_text" jdbcType="VARCHAR" property="rText"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="degree" jdbcType="FLOAT" property="degree"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
+        <result column="created_uid" jdbcType="INTEGER" property="createdUid"/>
+        <result column="modified_uid" jdbcType="INTEGER" property="modifiedUid"/>
+        <!--规则前件的模式-->
+        <collection column="id" property="frontPatternList" ofType="com.zm.inference.domain.subClass.SubPattern"
+                    select="com.zm.inference.mapper.PatternMapper.selectByPrimaryKey">
+        </collection>
+        <!--规则后件的模式-->
+    </resultMap>
+
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id, i_text, r_text, content, degree, created_time, modified_time, created_uid, modified_uid
@@ -80,7 +98,7 @@
                 #{rText,jdbcType=VARCHAR},
             </if>
             <if test="content != null">
-                #{content,jdbcType=VARCHAR}
+                #{content,jdbcType=VARCHAR},
             </if>
             <if test="degree != null">
                 #{degree,jdbcType=FLOAT},

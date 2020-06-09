@@ -3,7 +3,7 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.domain.subClass.SubRule;
-import com.zm.inference.service.impl.RuleService;
+import com.zm.inference.service.RuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
