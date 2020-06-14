@@ -92,7 +92,9 @@
                     <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>
                         <a @click="goAddUser">添加用户</a>
                     </el-menu-item>
-                    <el-menu-item index="1-2"><i class="el-icon-caret-right"></i>用户列表</el-menu-item>
+                    <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goUserList">用户列表</a>
+                    </el-menu-item>
                 </el-submenu>
                 <el-submenu index="2" v-show="visibility.dictManagement">
                     <template slot="title"><i class="el-icon-s-management"></i>字典管理</template>
@@ -104,14 +106,18 @@
                     <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
                         <a @click="goAddRule">新增规则</a>
                     </el-menu-item>
-                    <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goRuleList">规则列表</a>
+                    </el-menu-item>
                 </el-submenu>
                 <el-submenu index="4" v-show="visibility.factManagement">
                     <template slot="title"><i class="el-icon-document"></i>事实管理</template>
                     <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>
                         <a @click="goInference">事实推理</a>
                     </el-menu-item>
-                    <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goFactList">事实列表</a>
+                    </el-menu-item>
                 </el-submenu>
             </el-menu>
         </el-aside>

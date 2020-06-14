@@ -37,4 +37,9 @@ public interface FactMapper {
      * 根据patternId返回对应的事实知识
      */
     List<Fact> selectByPatternId(Integer patternId);
+
+    /**
+     * 查询返回所有的事实知识
+     */
+    List<Fact> selectAll();
 }

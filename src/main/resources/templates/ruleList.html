@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>个人中心</title>
+    <title>规则集合</title>
     <!--默认样式文件-->
     <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{~/plugin/element-ui-recently/index.css}">
@@ -94,59 +94,58 @@
             </el-header>
 
             <el-main>
-                <el-row :gutter="20">
-                    <el-col :span="6">
-                        <div class="box" v-if="!isEdit">
-                            用户名：
-                            <el-input
-                                    v-model="plusUser.user.uName"
-                                    :disabled="true">
-                            </el-input>
-                        </div>
-                        <div class="box" v-else>
-                            用户名：
-                            <el-input
-                                    placeholder="请输入用户名"
-                                    v-model="tmpUser.username"
-                                    :disabled="!isEdit">
-                            </el-input>
-                        </div>
-                        <div class="box" v-show="isEdit">
-                            修改密码：
-                            <el-input
-                                    placeholder="请输入密码"
-                                    v-model="tmpUser.password"
-                                    :disabled="!isEdit">
-                            </el-input>
-                        </div>
-                        <div class="box" v-show="isEdit">
-                            确认密码：
-                            <el-input
-                                    placeholder="请再次输入密码"
-                                    v-model="tmpUser.rePassword"
-                                    :disabled="!isEdit">
-                            </el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6" v-show="!isEdit">
-                        <el-button type="primary"
-                                   @click="changeEditMode">修改个人信息
-                        </el-button>
-                    </el-col>
-                    <el-col :span="3" v-show="isEdit">
-                        <el-button type="success"
-                                   @click="updateUser">保存信息修改
-                        </el-button>
-                    </el-col>
-                    <el-col :span="3" v-show="isEdit">
-                        <el-button type="warning"
-                                   @click="cancelEdit">取消修改
-                        </el-button>
-                    </el-col>
-                </el-row>
+                <el-table
+                        :data="ruleList"
+                        stripe
+                        style="width: 100%">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            prop="content"
+                            label="规则名称"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="iText"
+                            label="前件前缀表达式"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="rText"
+                            label="前件后缀表达式"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="degree"
+                            label="规则强度"
+                            width="100">
+                    </el-table-column>
+                    <el-table-column
+                            prop="createdTime"
+                            label="规则创建时间"
+                            width="250">
+                    </el-table-column>
+                    <el-table-column
+                            prop="modifiedTime"
+                            label="最后修改时间"
+                            width="250">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </el-main>
+
             <el-footer>
 
             </el-footer>
@@ -174,93 +173,16 @@
                 ruleManagement: true,
                 factManagement: true
             },
-            isEdit: false,
-            tmpUser: {
-                username: '',
-                password: '',
-                rePassword: '',
-            }
+            ruleList: []
         },
         methods: {}
     })
 
-    function clearInput() {
-        app.tmpUser.username = '';
-        app.tmpUser.password = '';
-        app.tmpUser.rePassword = '';
-    }
-
-    function changeEditMode() {
-        app.isEdit = !app.isEdit;
-    }
-
-    function cancelEdit() {
-        changeEditMode();
-        clearInput();
-    }
-
-    function emptyCheck() {
-        if (app.tmpUser.username == null || app.tmpUser.username == '') {
-            return false;
-        }
-        if (app.tmpUser.password == null || app.tmpUser.password == '') {
-            return false;
-        }
-        if (app.tmpUser.rePassword == null || app.tmpUser.rePassword == '') {
-            return false;
-        }
-        return true;
-    }
-
-    function updateUser() {
-        if (!emptyCheck()) {
-            app.$message({
-                type: 'warning',
-                message: '用户名和密码都不可为空!'
-            });
-            return;
-        }
-        if (app.tmpUser.password != app.tmpUser.rePassword) {
-            app.$message({
-                type: 'warning',
-                message: '两次密码输入不一致!'
-            });
-            return;
-        }
-
-        let newUserInfo = {
-            id: app.plusUser.user.id,
-            uName: app.tmpUser.username,
-            uPassword: app.tmpUser.password,
-        };
-
-        app.$confirm('确定更新当前用户的用户名和密码信息？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            ajaxPostJSON("/user/updateUserInfo", newUserInfo, function (d) {
-                if (d.code == 'success') {
-                    app.plusUser = d.data;
-                    app.$message({
-                        type: 'success',
-                        message: d.message
-                    });
-                    cancelEdit();
-                } else {
-                    app.$message({
-                        type: 'error',
-                        message: d.message
-                    });
-                    clearInput();
-                }
-            })
-        }).catch(() => {
-            app.$message({
-                type: 'info',
-                message: '已取消更新'
-            });
-        });
+    function getRuleList() {
+        ajaxPost("/inference/rule/getRuleList", null, function (d) {
+            let ruleList = d.data;
+            app.ruleList = ruleList;
+        })
     }
 
     window.onload = function () {
@@ -268,6 +190,8 @@
         adjustHeight();
         // 根据用户角色判定侧边栏
         showAsideByRole(app.plusUser);
+        // 获取规则集合
+        getRuleList();
     }
 </script>
 </body>

@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import com.zm.inference.mapper.RuleMapper;
 import com.zm.inference.domain.Rule;
 
+import java.beans.Transient;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -65,6 +66,7 @@ public class RuleService {
     /**
      * 添加新的规则
      */
+    @Transient
     public Boolean addNewRule(SubRule subRule) {
         // step1：首先看规则中所含的事实fact是否存在于系统中，如果不存在就需要进行插入，然后都需要给fact加上id值
         List<SubPattern> frontPatterns = subRule.getFrontPatternList();

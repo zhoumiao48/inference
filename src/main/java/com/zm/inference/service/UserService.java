@@ -203,4 +203,17 @@ public class UserService {
         userMapper.updateByPrimaryKeySelective(user);
         return getUserRole(user);
     }
+
+    /**获取所有的系统用户和其对应的角色*/
+    public List<PlusUser> getAllUser(){
+        List<User> users = userMapper.selectAll();
+
+        List<PlusUser> plusUsers = new ArrayList<>(users.size());
+
+        for(User tmpUser:users){
+            plusUsers.add(getUserRole(tmpUser));
+        }
+
+        return plusUsers;
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description 规则控制器
@@ -35,5 +36,11 @@ public class RuleController extends BaseController {
             return retMsg.Set(MsgType.SUCCESS, null, "规则录入成功");
         }
         return retMsg.Set(MsgType.ERROR, null, "规则知识录入失败");
+    }
+
+    @PostMapping("/getRuleList")
+    public Object getRuleList() {
+        List<SubRule> subRules = ruleService.getAllRule();
+        return retMsg.Set(MsgType.SUCCESS, subRules, "获取规则集合成功");
     }
 }

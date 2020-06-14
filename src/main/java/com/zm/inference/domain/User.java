@@ -27,4 +27,12 @@ public class User extends BaseClass {
      */
     @JsonProperty("uPassword")
     protected String uPassword;
+
+    public User() {
+    }
+
+    public User(String uName, String uPassword) {
+        this.uName = uName;
+        this.uPassword = uPassword;
+    }
 }

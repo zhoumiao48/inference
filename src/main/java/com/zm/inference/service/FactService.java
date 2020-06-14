@@ -69,11 +69,21 @@ public class FactService {
         return origFacts;
     }
 
+    /**
+     * 根据模式id返回相应的事实知识集合
+     */
     public List<Fact> getFactsByPid(Integer patternId) {
 
         // 首先根据patternId找到先关的所有fId
         List<Integer> fIdList = mpfMapper.selectFIdByPId(patternId);
         // 其次根据fId找到所有的fact
         return factMapper.selectByIdIn(fIdList);
+    }
+
+    /**
+     * 返回所有的事实知识集合
+     */
+    public List<Fact> getAllFact() {
+        return factMapper.selectAll();
     }
 }

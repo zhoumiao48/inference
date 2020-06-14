@@ -48,7 +48,9 @@
                     <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>
                         <a @click="goAddUser">添加用户</a>
                     </el-menu-item>
-                    <el-menu-item index="1-2"><i class="el-icon-caret-right"></i>用户列表</el-menu-item>
+                    <el-menu-item index="1-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goUserList">用户列表</a>
+                    </el-menu-item>
                 </el-submenu>
                 <el-submenu index="2" v-show="visibility.dictManagement">
                     <template slot="title"><i class="el-icon-s-management"></i>字典管理</template>
@@ -60,14 +62,18 @@
                     <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
                         <a @click="goAddRule">新增规则</a>
                     </el-menu-item>
-                    <el-menu-item index="4-2"><i class="el-icon-caret-right"></i>规则列表</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goRuleList">规则列表</a>
+                    </el-menu-item>
                 </el-submenu>
                 <el-submenu index="4" v-show="visibility.factManagement">
                     <template slot="title"><i class="el-icon-document"></i>事实管理</template>
                     <el-menu-item index="3-1"><i class="el-icon-caret-right"></i>
                         <a @click="goInference">事实推理</a>
                     </el-menu-item>
-                    <el-menu-item index="3-2"><i class="el-icon-caret-right"></i>事实列表</el-menu-item>
+                    <el-menu-item index="4-1"><i class="el-icon-caret-right"></i>
+                        <a @click="goFactList">事实列表</a>
+                    </el-menu-item>
                 </el-submenu>
             </el-menu>
         </el-aside>
@@ -89,17 +95,18 @@
 
             <!--主体部分-->
             <el-main>
-                <el-row :gutter="20">
+                <el-row :gutter="20" class="box">
                     <el-col :span="6">
                         <div class="box">
-                            用户名：
+                            待添加用户用户名：
                             <el-input
+                                    placeholder="请输入用户名"
                                     v-model="input.uName">
                             </el-input>
                         </div>
 
                         <div class="box">
-                            修改密码：
+                            待添加用户密码：
                             <el-input
                                     type="password"
                                     placeholder="请输入密码"
@@ -107,7 +114,7 @@
                             </el-input>
                         </div>
                         <div class="box">
-                            确认密码：
+                            二次输入密码：
                             <el-input
                                     placeholder="请再次输入密码"
                                     v-model="input.rePassword">
@@ -115,11 +122,10 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row :gutter="20">
+                <el-row :gutter="20" class="box">
 
                     <el-col :span="6">
                         <el-select v-model="input.uRoleId"
-                                   size="mini"
                                    clearable
                                    placeholder="选 择 角 色">
                             <el-option
@@ -131,9 +137,9 @@
                         </el-select>
                     </el-col>
                 </el-row>
-                <el-row :gutter="20">
+                <el-row :gutter="20" class="box">
                     <el-col :span="3">
-                        <el-button type="primary">新增用户
+                        <el-button type="primary" @click="addNewUser">确认添加
                         </el-button>
                     </el-col>
                     <el-col :span="3">
@@ -176,7 +182,7 @@
                 uName: '',
                 uPassword: '',
                 rePassword: '',
-                uRoleId: '',
+                uRoleId: null,
             }
         },
         methods: {}
@@ -218,12 +224,25 @@
         }
 
         let newUser = {
-            uName: app.input.uName,
-            uPassword: app.input.uPassword
+            username: app.input.uName,
+            password: app.input.uPassword,
+            roleId: app.input.uRoleId
         }
 
-        ajaxPostJSON("/user/addNewUser", newUser, function (d) {
-
+        console.log(newUser);
+        ajaxPost("/user/addNewUser", newUser, function (d) {
+            if (d.code = 'success') {
+                app.$message({
+                    type: 'success',
+                    message: d.message
+                });
+            } else {
+                app.$message({
+                    type: 'error',
+                    message: d.message
+                });
+            }
+            clearInput();
         })
     }
 

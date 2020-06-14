@@ -94,4 +94,43 @@ public class ViewController {
         model.addAttribute("plusUser", pu);
         return "addUser";
     }
+
+    /**
+     * 跳转到规则集合页面
+     */
+    @GetMapping("/goRuleList")
+    public String goRuleList(
+            Model model,
+            HttpServletRequest request
+    ) {
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "ruleList";
+    }
+
+    /**
+     * 跳转到事实知识集合页面
+     */
+    @GetMapping("/goFactList")
+    public String goFactList(
+            Model model,
+            HttpServletRequest request
+    ) {
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "factList";
+    }
+
+    /**
+     * 跳转到事实知识集合页面
+     */
+    @GetMapping("/goUserList")
+    public String goUserList(
+            Model model,
+            HttpServletRequest request
+    ) {
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "userList";
+    }
 }

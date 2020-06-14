@@ -140,6 +140,25 @@ function adjustHeight() {
     let height = $(window).height() + "px";
     document.getElementById("layoutContainer").style.height = height;
 }
+// 时间戳格式化
+function transformTime(timestamp = +new Date()) {
+    if (timestamp) {
+        var time = new Date(timestamp);
+        var y = time.getFullYear();
+        var M = time.getMonth() + 1;
+        var d = time.getDate();
+        var h = time.getHours();
+        var m = time.getMinutes();
+        var s = time.getSeconds();
+        return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m) + ':' + addZero(s);
+    } else {
+        return '';
+    }
+}
+
+function addZero(m) {
+    return m < 10 ? '0' + m : m;
+}
 
 // 根据角色返回侧边栏数组
 function showAsideByRole(plusUser) {
@@ -217,6 +236,31 @@ function goAddUser(){
         window.location.href = '/view/goAddUser';
     }, 150);
 }
+
+// 跳转到规则集合页面
+function goRuleList(){
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goRuleList';
+    }, 150);
+}
+
+// 跳转到事实知识集合页面
+function goFactList() {
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goFactList';
+    }, 150);
+}
+
+// 跳转到用户集合页面
+function goUserList() {
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goUserList';
+    }, 150);
+}
+
 /**
  * generateUUID 生成UUID
  * @returns {string} 返回字符串

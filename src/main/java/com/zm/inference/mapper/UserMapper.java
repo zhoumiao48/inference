@@ -20,4 +20,8 @@ public interface UserMapper {
     Integer countByUName(@Param("uName")String uName);
 
     List<User> selectByUName(@Param("uName")String uName);
+
+    List<User> selectAll();
+
+
 }
