@@ -3,22 +3,20 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>个人中心</title>
+    <title>添加用户</title>
     <!--默认样式文件-->
     <link rel="stylesheet" th:href="@{~/plugin/bootstrap/css/bootstrap.min.css}">
+    <!--<link rel="stylesheet" th:href="@{~/plugin/element-ui/lib/theme-chalk/index.css}">-->
     <link rel="stylesheet" th:href="@{~/plugin/element-ui-recently/index.css}">
     <link rel="stylesheet" th:href="@{~/plugin/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{~/css/fadeInAnimation.css}">
+    <link rel="stylesheet" th:href="@{~/css/sideBar.css}">
     <!--通用样式-->
     <link rel="stylesheet" th:href="@{~/css/common.css}">
     <!--当前页样式-->
     <style>
         span {
             font-size: 14px;
-        }
-
-        .el-row {
-            margin-top: 10px;
         }
 
         .el-header {
@@ -30,13 +28,11 @@
         .el-footer {
             background-color: #9fabba;
         }
-
-        .box {
-            padding: 10px 0px 10px 0px;
-        }
     </style>
 </head>
 <body onload="document.body.style.opacity='1'">
+<!--背景图片-->
+
 <div id="app">
 
     <el-container id="layoutContainer" style="border: 1px solid #eee">
@@ -88,63 +84,66 @@
                         <el-dropdown-item><a @click="openLogout">登出系统</a></el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <span>你好: {{plusUser.user.uName}}</span>
+                <span>你好：{{plusUser.user.uName}}</span>
             </el-header>
 
+            <!--主体部分-->
             <el-main>
                 <el-row :gutter="20">
                     <el-col :span="6">
-                        <div class="box" v-if="!isEdit">
+                        <div class="box">
                             用户名：
                             <el-input
-                                    v-model="plusUser.user.uName"
-                                    :disabled="true">
+                                    v-model="input.uName">
                             </el-input>
                         </div>
-                        <div class="box" v-else>
-                            用户名：
-                            <el-input
-                                    placeholder="请输入用户名"
-                                    v-model="tmpUser.username"
-                                    :disabled="!isEdit">
-                            </el-input>
-                        </div>
-                        <div class="box" v-show="isEdit">
+
+                        <div class="box">
                             修改密码：
                             <el-input
+                                    type="password"
                                     placeholder="请输入密码"
-                                    v-model="tmpUser.password"
-                                    :disabled="!isEdit">
+                                    v-model="input.uPassword">
                             </el-input>
                         </div>
-                        <div class="box" v-show="isEdit">
+                        <div class="box">
                             确认密码：
                             <el-input
                                     placeholder="请再次输入密码"
-                                    v-model="tmpUser.rePassword"
-                                    :disabled="!isEdit">
+                                    v-model="input.rePassword">
                             </el-input>
                         </div>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="6" v-show="!isEdit">
-                        <el-button type="primary"
-                                   @click="changeEditMode">修改个人信息
+                <el-row :gutter="20">
+
+                    <el-col :span="6">
+                        <el-select v-model="input.uRoleId"
+                                   size="mini"
+                                   clearable
+                                   placeholder="选 择 角 色">
+                            <el-option
+                                    v-for="item in roleOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="3">
+                        <el-button type="primary">新增用户
                         </el-button>
                     </el-col>
-                    <el-col :span="3" v-show="isEdit">
-                        <el-button type="success"
-                                   @click="updateUser">保存信息修改
-                        </el-button>
-                    </el-col>
-                    <el-col :span="3" v-show="isEdit">
+                    <el-col :span="3">
                         <el-button type="warning"
-                                   @click="cancelEdit">取消修改
+                                   @click="clearInput">取消修改
                         </el-button>
                     </el-col>
                 </el-row>
             </el-main>
+
             <el-footer>
 
             </el-footer>
@@ -172,53 +171,45 @@
                 ruleManagement: true,
                 factManagement: true
             },
-            isEdit: false,
-            tmpUser: {
-                username: '',
-                password: '',
+            roleOptions: [],
+            input: {
+                uName: '',
+                uPassword: '',
                 rePassword: '',
+                uRoleId: '',
             }
         },
         methods: {}
     })
 
-    function clearInput() {
-        app.tmpUser.username = '';
-        app.tmpUser.password = '';
-        app.tmpUser.rePassword = '';
-    }
-
-    function changeEditMode() {
-        app.isEdit = !app.isEdit;
-    }
-
-    function cancelEdit() {
-        changeEditMode();
-        clearInput();
-    }
-
-    function emptyCheck(){
-        if(app.tmpUser.username == null || app.tmpUser.username == ''){
+    function emptyCheck() {
+        if (app.input.uName == null || app.input.uName == '') {
             return false;
         }
-        if(app.tmpUser.password == null || app.tmpUser.password == ''){
+        if (app.input.uPassword == null || app.input.uPassword == '') {
             return false;
         }
-        if(app.tmpUser.rePassword== null || app.tmpUser.rePassword == ''){
+        if (app.input.rePassword == null || app.input.rePassword == '') {
             return false;
         }
         return true;
     }
 
-    function updateUser() {
-        if(!emptyCheck()){
+    function clearInput() {
+        app.input.uName = '';
+        app.input.uPassword = '';
+        app.input.rePassword = '';
+    }
+
+    function addNewUser() {
+        if (!emptyCheck()) {
             app.$message({
                 type: 'warning',
                 message: '用户名和密码都不可为空!'
             });
             return;
         }
-        if (app.tmpUser.password != app.tmpUser.rePassword) {
+        if (app.input.rePassword != app.input.uPassword) {
             app.$message({
                 type: 'warning',
                 message: '两次密码输入不一致!'
@@ -226,39 +217,14 @@
             return;
         }
 
-        let newUserInfo = {
-            id:app.plusUser.user.id,
-            uName: app.tmpUser.username,
-            uPassword: app.tmpUser.password,
-        };
+        let newUser = {
+            uName: app.input.uName,
+            uPassword: app.input.uPassword
+        }
 
-        app.$confirm('确定更新当前用户的用户名和密码信息？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            ajaxPostJSON("/user/updateUserInfo", newUserInfo, function (d) {
-                if (d.code == 'success') {
-                    app.plusUser = d.data;
-                    app.$message({
-                        type: 'success',
-                        message: d.message
-                    });
-                    cancelEdit();
-                } else {
-                    app.$message({
-                        type: 'error',
-                        message: d.message
-                    });
-                    clearInput();
-                }
-            })
-        }).catch(() => {
-            app.$message({
-                type: 'info',
-                message: '已取消更新'
-            });
-        });
+        ajaxPostJSON("/user/addNewUser", newUser, function (d) {
+
+        })
     }
 
     window.onload = function () {
@@ -266,6 +232,19 @@
         adjustHeight();
         // 根据用户角色判定侧边栏
         showAsideByRole(app.plusUser);
+        // 加载用户角色选项
+        ajaxPost("/user/getRoleList", null, function (d) {
+            let ans = d.data;
+            let roleArr = [];
+            for (let i = 0; i < ans.length; i++) {
+                let tmp = {
+                    value: ans[i].id,
+                    label: ans[i].name
+                };
+                roleArr.push(tmp);
+            }
+            app.roleOptions = roleArr;
+        })
     }
 </script>
 </body>

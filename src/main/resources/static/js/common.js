@@ -209,6 +209,14 @@ function goAddRule() {
         window.location.href = '/view/goAddRule';
     }, 150);
 }
+
+// 跳转到添加用户页面
+function goAddUser(){
+    app.loading = true;
+    setTimeout(function () {
+        window.location.href = '/view/goAddUser';
+    }, 150);
+}
 /**
  * generateUUID 生成UUID
  * @returns {string} 返回字符串

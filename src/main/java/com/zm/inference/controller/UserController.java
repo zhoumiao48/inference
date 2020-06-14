@@ -3,6 +3,7 @@ package com.zm.inference.controller;
 import com.zm.inference.common.util.domain.BaseController;
 import com.zm.inference.common.util.MsgType;
 import com.zm.inference.common.util.domain.IdAndName;
+import com.zm.inference.domain.User;
 import com.zm.inference.domain.plusClass.PlusUser;
 import com.zm.inference.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -63,4 +64,19 @@ public class UserController extends BaseController {
         }
         return retMsg.Set(MsgType.ERROR, null, "登出失败");
     }
+
+
+    @PostMapping("/updateUserInfo")
+    public Object updateUserInfo(
+            @RequestBody User user
+    ){
+        if(userService.isUserExist(user)){
+            return retMsg.Set(MsgType.ERROR,null,"用户名已存在，请更换用户名");
+        }
+
+        PlusUser plusUser = userService.updateUserInfo(user);
+        return retMsg.Set(MsgType.SUCCESS,plusUser,"用户信息更新成功");
+    }
+
+
 }

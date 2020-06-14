@@ -16,6 +16,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    
+    Integer countByUName(@Param("uName")String uName);
 
     List<User> selectByUName(@Param("uName")String uName);
 }

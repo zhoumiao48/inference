@@ -1,5 +1,6 @@
 package com.zm.inference.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Plus;
 import com.zm.inference.domain.plusClass.PlusUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -79,5 +80,18 @@ public class ViewController {
         PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
         model.addAttribute("plusUser", pu);
         return "addRule";
+    }
+
+    /**
+     * 跳转到增加用户界面
+     */
+    @GetMapping("/goAddUser")
+    public String goAddUser(
+            Model model,
+            HttpServletRequest request
+    ) {
+        PlusUser pu = (PlusUser) request.getSession().getAttribute("plusUser");
+        model.addAttribute("plusUser", pu);
+        return "addUser";
     }
 }

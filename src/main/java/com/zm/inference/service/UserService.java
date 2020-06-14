@@ -144,7 +144,7 @@ public class UserService {
     }
 
     /**
-     * 获取用户对应的角色
+     * 获取用户对应的角色，并将结果封装为PlusUser
      */
     public PlusUser getUserRole(User user) {
         List<Integer> roleIds = mapUserRoleMapper.selectRIdByUId(user.getId());
@@ -178,5 +178,29 @@ public class UserService {
         pUser.setUser(user);
         pUser.setRole(uRole);
         return pUser;
+    }
+
+    /**
+     * 查看当前用户名的用户是否存在
+     */
+    public boolean isUserExist(User user) {
+        if (userMapper.countByUName(user.getUName()) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 更新用户信息并返回前端更新后的PlusUser
+     */
+    public PlusUser updateUserInfo(User user) {
+        try {
+            String md5Pwd = Md5Trans.getMD5(user.getUPassword());
+            user.setUPassword(md5Pwd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        userMapper.updateByPrimaryKeySelective(user);
+        return getUserRole(user);
     }
 }
